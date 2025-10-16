@@ -32,6 +32,8 @@ class Application {
 
   glm::vec2 GetFramebufferSize() const;
 
+  const Window& GetWindow() const { return *window_; }
+
   static Application& Get();
   static float GetTime();
 

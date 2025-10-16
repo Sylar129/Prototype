@@ -10,11 +10,12 @@
 namespace prototype::core {
 
 Window::Window(const WindowSpecification& specification)
-    : specification_(specification) {}
+    : specification_(specification),
+      camera_(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 1.0f, 0.0f)) {}
 
 Window::~Window() {}
 
-void Window::Create() {
+void Window::Init() {
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -27,14 +28,14 @@ void Window::Create() {
     CORE_LOG_ERROR("Failed to create GLFW window!");
     assert(false);
   }
+  camera_.Init(handle_);
 
   glfwMakeContextCurrent(handle_);
   gladLoadGL(glfwGetProcAddress);
-
-  glfwSwapInterval(specification_.vsync ? 1 : 0);
+  glEnable(GL_DEPTH_TEST);
 }
 
-void Window::Destroy() {
+void Window::Clear() {
   if (handle_) {
     glfwDestroyWindow(handle_);
   }
@@ -42,7 +43,18 @@ void Window::Destroy() {
   handle_ = nullptr;
 }
 
-void Window::Update() { glfwSwapBuffers(handle_); }
+void Window::Update() {
+  camera_.ProcessInput();
+  glfwSwapBuffers(handle_);
+}
+
+glm::mat4 Window::GetPorjection() const {
+  return glm::perspective(
+      glm::radians(camera_.GetZoom()),
+      (float)specification_.width / (float)specification_.height, 0.1f, 100.0f);
+}
+
+glm::mat4 Window::GetView() const { return camera_.GetViewMatrix(); }
 
 glm::vec2 Window::GetFramebufferSize() const {
   int width, height;

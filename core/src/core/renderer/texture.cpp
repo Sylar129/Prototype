@@ -1,6 +1,6 @@
 // Copyright (c) 2025 Sylar129. All rights reserved
 
-#include "core/renderer/renderer.h"
+#include "core/renderer/texture.h"
 
 #include "core/log.h"
 #include "glad/gl.h"
@@ -66,7 +66,7 @@ Texture LoadTexture(const std::filesystem::path& path) {
   return result;
 }
 
-Framebuffer CreateFramebufferWithTexture(const Texture texture) {
+Framebuffer CreateFramebufferWithTexture(const Texture& texture) {
   Framebuffer result;
 
   glCreateFramebuffers(1, &result.handle);
@@ -80,7 +80,7 @@ Framebuffer CreateFramebufferWithTexture(const Texture texture) {
 }
 
 bool AttachTextureToFramebuffer(Framebuffer& framebuffer,
-                                const Texture texture) {
+                                const Texture& texture) {
   glNamedFramebufferTexture(framebuffer.handle, GL_COLOR_ATTACHMENT0,
                             texture.handle, 0);
 
@@ -93,7 +93,7 @@ bool AttachTextureToFramebuffer(Framebuffer& framebuffer,
   return true;
 }
 
-void BlitFramebufferToSwapchain(const Framebuffer framebuffer) {
+void BlitFramebufferToSwapchain(const Framebuffer& framebuffer) {
   glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer.handle);
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);  // swapchain
 

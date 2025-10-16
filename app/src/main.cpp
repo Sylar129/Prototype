@@ -1,6 +1,7 @@
 // Copyright (c) 2025 Sylar129. All rights reserved
 
 #include "app_layer.h"
+#include "model_layer.h"
 #include "core/application.h"
 #include "core/log.h"
 
@@ -13,7 +14,8 @@ int main() {
 
   prototype::core::Application application(app_spec);
   application.Init();
-  application.PushLayer(std::make_shared<prototype::AppLayer>());
+  // application.PushLayer(std::make_shared<prototype::AppLayer>());
+  application.PushLayer(std::make_shared<prototype::ModelLayer>());
   application.Run();
   application.Clear();
 }

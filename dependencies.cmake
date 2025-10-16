@@ -78,4 +78,10 @@ set(imguiSrc
     )
 add_library(imguilib STATIC ${imguiSrc})
 
-
+# assimp
+FetchContent_Declare(
+    assimp
+    URL https://github.com/assimp/assimp/archive/refs/tags/v6.0.2.zip
+    DOWNLOAD_EXTRACT_TIMESTAMP OFF
+)
+FetchContent_MakeAvailable(assimp)

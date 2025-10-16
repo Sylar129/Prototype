@@ -33,7 +33,8 @@ void Application::Init() {
     specification_.window_spec.title = specification_.name;
 
   window_ = std::make_shared<Window>(specification_.window_spec);
-  window_->Create();
+  window_->Init();
+
 
   imgui_layer_ = std::make_unique<ImguiLayer>();
   imgui_layer_->Init(window_->GetHandle());
@@ -50,13 +51,16 @@ void Application::Run() {
   while (running_) {
     glfwPollEvents();
 
+    glClearColor(0, 0, 0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
     if (window_->ShouldClose()) {
       Stop();
       break;
     }
 
     imgui_layer_->OnRenderBegin();
-    imgui_layer_->OnRender();
+    // imgui_layer_->OnRender();
 
     float current_time = GetTime();
     float timestep = glm::clamp(current_time - last_time, 0.001f, 0.1f);
@@ -86,7 +90,7 @@ void Application::Clear() {
   }
   layer_stack_.clear();
   imgui_layer_->Clear();
-  window_->Destroy();
+  window_->Clear();
 
   glfwTerminate();
 

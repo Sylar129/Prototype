@@ -12,6 +12,8 @@ struct Texture {
   GLuint handle = 0;
   uint32_t width = 0;
   uint32_t height = 0;
+  std::string type;
+  std::string path;
 };
 
 struct Framebuffer {
@@ -21,8 +23,8 @@ struct Framebuffer {
 
 Texture CreateTexture(int width, int height);
 Texture LoadTexture(const std::filesystem::path& path);
-Framebuffer CreateFramebufferWithTexture(const Texture texture);
+Framebuffer CreateFramebufferWithTexture(const Texture& texture);
 bool AttachTextureToFramebuffer(Framebuffer& framebuffer,
-                                const Texture texture);
-void BlitFramebufferToSwapchain(const Framebuffer framebuffer);
+                                const Texture& texture);
+void BlitFramebufferToSwapchain(const Framebuffer& framebuffer);
 }  // namespace prototype::renderer

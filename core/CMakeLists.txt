@@ -14,10 +14,14 @@ set(SOURCES
     src/core/log.cpp
     src/core/imgui_layer.h
     src/core/imgui_layer.cpp
-    src/core/renderer/renderer.h
-    src/core/renderer/renderer.cpp
+    src/core/renderer/mesh.h
+    src/core/renderer/mesh.cpp
+    src/core/renderer/model.h
+    src/core/renderer/model.cpp
     src/core/renderer/shader.h
     src/core/renderer/shader.cpp
+    src/core/renderer/texture.h
+    src/core/renderer/texture.cpp
     src/core/renderer/utils.h
     src/core/renderer/utils.cpp
 )
@@ -38,5 +42,6 @@ target_link_libraries(core glfw)
 target_link_libraries(core glad)
 target_link_libraries(core glm)
 target_link_libraries(core imguilib)
+target_link_libraries(core assimp)
 
 target_include_directories(core PUBLIC "src" "vendor/stb")
