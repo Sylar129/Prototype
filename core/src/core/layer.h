@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "core/event.h"
+#include "core/events/event.h"
 
 namespace prototype::core {
 
