@@ -5,6 +5,7 @@
 #include <string>
 
 #include "GLFW/glfw3.h"
+#include "core/events/event.h"
 #include "core/renderer/camera.h"
 #include "glm/glm.hpp"
 
@@ -18,13 +19,17 @@ struct WindowSpecification {
 
 class Window {
  public:
-  Window(const WindowSpecification& specification = WindowSpecification());
+  using EventCallbackFn = std::function<void(Event&)>;
+
+  Window(const WindowSpecification& specification);
   ~Window();
 
   void Init();
   void Clear();
 
   void Update();
+
+  void SetEventCallback(const EventCallbackFn& callback);
 
   glm::mat4 GetPorjection() const;
   glm::mat4 GetView() const;
@@ -35,9 +40,17 @@ class Window {
   GLFWwindow* GetHandle() { return handle_; }
 
  private:
-  WindowSpecification specification_;
+  struct WindowData {
+    std::string title;
+    int width;
+    int height;
+    EventCallbackFn event_callback;
+  };
+
+  void SetCallback();
 
   GLFWwindow* handle_ = nullptr;
+  WindowData data_;
   renderer::Camera camera_;
 };
 

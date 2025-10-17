@@ -3,11 +3,11 @@
 #
 
 set(SOURCES
-    src/main.cpp
-    src/app_layer.h
     src/app_layer.cpp
-    src/model_layer.h
+    src/app_layer.h
+    src/main.cpp
     src/model_layer.cpp
+    src/model_layer.h
 )
 
 add_executable(app)

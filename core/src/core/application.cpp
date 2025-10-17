@@ -29,12 +29,14 @@ void Application::Init() {
   glfwInit();
 
   // Set window title to app name if empty
-  if (specification_.window_spec.title.empty())
+  if (specification_.window_spec.title.empty()) {
     specification_.window_spec.title = specification_.name;
+  }
 
   window_ = std::make_shared<Window>(specification_.window_spec);
   window_->Init();
 
+  window_->SetEventCallback([this](Event& event) { OnEvent(event); });
 
   imgui_layer_ = std::make_unique<ImguiLayer>();
   imgui_layer_->Init(window_->GetHandle());
@@ -96,6 +98,8 @@ void Application::Clear() {
 
   kApplication = nullptr;
 }
+
+void Application::OnEvent(Event& event) {}
 
 void Application::PushLayer(std::shared_ptr<Layer> layer) {
   layer_stack_.push_back(layer);
