@@ -51,8 +51,6 @@ void Application::Run() {
 
   // Main Application loop
   while (running_) {
-    glfwPollEvents();
-
     glClearColor(0, 0, 0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -67,6 +65,9 @@ void Application::Run() {
     float current_time = GetTime();
     float timestep = glm::clamp(current_time - last_time, 0.001f, 0.1f);
     last_time = current_time;
+
+    glfwPollEvents();
+
 
     // Main layer update here
     for (const auto& layer : layer_stack_) {

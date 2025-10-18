@@ -29,12 +29,15 @@ void ModelLayer::OnEvent(Event& event) {
   EventDispatcher dispatcher(event);
   dispatcher.Dispatch(this, &ModelLayer::OnWindowResizeEvent);
   dispatcher.Dispatch(this, &ModelLayer::OnKeyPressedEvent);
+  dispatcher.Dispatch(this, &ModelLayer::OnKeyReleasedEvent);
+  dispatcher.Dispatch(this, &ModelLayer::OnMouseButtonPressedEvent);
+  dispatcher.Dispatch(this, &ModelLayer::OnMouseButtonReleasedEvent);
   dispatcher.Dispatch(this, &ModelLayer::OnMouseScrolledEvent);
+  dispatcher.Dispatch(this, &ModelLayer::OnMouseMovedEvent);
 }
 
 void ModelLayer::OnUpdate(float ts) {
   camera_.ProcessKeyboard(camera_move_, ts);
-  camera_move_ = renderer::Camera::Movement::kStill;
 }
 
 void ModelLayer::OnRender() {
@@ -85,20 +88,46 @@ bool ModelLayer::OnKeyPressedEvent(KeyPressdEvent& event) {
   return false;
 }
 
+bool ModelLayer::OnKeyReleasedEvent(KeyReleasedEvent& event) {
+  camera_move_ = renderer::Camera::Movement::kStill;
+  return false;
+}
+
+bool ModelLayer::OnMouseButtonPressedEvent(MouseButtonPressedEvent& event) {
+  if (event.GetMouseButton() == MouseCode::kButtonRight) {
+    camera_can_move_ = true;
+  }
+  return false;
+}
+
+bool ModelLayer::OnMouseButtonReleasedEvent(MouseButtonReleasedEvent& event) {
+  if (event.GetMouseButton() == MouseCode::kButtonRight) {
+    camera_can_move_ = false;
+  }
+  return false;
+}
+
 bool ModelLayer::OnMouseScrolledEvent(MouseScrolledEvent& event) {
+  camera_.ProcessMouseScroll(event.GetYOffset());
+  return false;
+}
+
+bool ModelLayer::OnMouseMovedEvent(MouseMovedEvent& event) {
   static float last_x = 400;
   static float last_y = 300;
   static bool first = true;
 
-  auto xpos = event.GetXOffset();
-  auto ypos = event.GetYOffset();
+  auto xpos = event.GetX();
+  auto ypos = event.GetY();
 
   if (first) {
     last_x = xpos;
     last_y = ypos;
     first = false;
   }
-  camera_.ProcessMouseMovement(xpos - last_x, last_y - ypos);
+  if (camera_can_move_) {
+    camera_.ProcessMouseMovement(xpos - last_x, last_y - ypos);
+  }
   last_x = xpos;
   last_y = ypos;
   return false;

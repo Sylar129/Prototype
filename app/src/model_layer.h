@@ -28,12 +28,17 @@ class ModelLayer : public core::Layer {
  private:
   bool OnWindowResizeEvent(WindowResizeEvent& event);
   bool OnKeyPressedEvent(KeyPressdEvent& event);
+  bool OnKeyReleasedEvent(KeyReleasedEvent& event);
+  bool OnMouseButtonPressedEvent(MouseButtonPressedEvent& event);
+  bool OnMouseButtonReleasedEvent(MouseButtonReleasedEvent& event);
   bool OnMouseScrolledEvent(MouseScrolledEvent& event);
+  bool OnMouseMovedEvent(MouseMovedEvent& event);
 
   renderer::Shader shader_;
   renderer::Model model_;
   renderer::Camera camera_;
   renderer::Camera::Movement camera_move_;
+  bool camera_can_move_ = false;
 
   int window_width_ = 0;
   int window_height_ = 0;
