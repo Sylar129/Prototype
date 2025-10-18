@@ -16,6 +16,7 @@ class AppLayer : public core::Layer {
 
   virtual void OnAttach() override;
   virtual void OnDetach() override;
+  virtual void OnEvent(Event& event);
   virtual void OnUpdate(float ts) override;
   virtual void OnRender() override;
 

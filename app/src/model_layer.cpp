@@ -8,10 +8,13 @@
 #include "core/renderer/shader.h"
 #include "glm/ext/matrix_clip_space.hpp"
 #include "glm/ext/matrix_transform.hpp"
+#include "glm/glm.hpp"
 
 namespace prototype {
 
-ModelLayer::ModelLayer() : model_("backpack/backpack.obj") {}
+ModelLayer::ModelLayer()
+    : model_("backpack/backpack.obj"),
+      camera_(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 1.0f, 0.0f)) {}
 
 ModelLayer::~ModelLayer() {}
 
@@ -22,13 +25,25 @@ void ModelLayer::OnAttach() {
 
 void ModelLayer::OnDetach() { shader_.Delete(); }
 
-void ModelLayer::OnUpdate(float ts) {}
+void ModelLayer::OnEvent(Event& event) {
+  EventDispatcher dispatcher(event);
+  dispatcher.Dispatch(this, &ModelLayer::OnWindowResizeEvent);
+  dispatcher.Dispatch(this, &ModelLayer::OnKeyPressedEvent);
+  dispatcher.Dispatch(this, &ModelLayer::OnMouseScrolledEvent);
+}
+
+void ModelLayer::OnUpdate(float ts) {
+  camera_.ProcessKeyboard(camera_move_, ts);
+  camera_move_ = renderer::Camera::Movement::kStill;
+}
 
 void ModelLayer::OnRender() {
   shader_.Use();
 
-  shader_.SetMat4("projection", core::Application::Get().GetWindow().GetPorjection());
-  shader_.SetMat4("view", core::Application::Get().GetWindow().GetView());
+  auto projection = glm::perspective(glm::radians(camera_.GetZoom()),
+                                     (float)1920 / (float)1080, 0.1f, 100.0f);
+  shader_.SetMat4("projection", projection);
+  shader_.SetMat4("view", camera_.GetViewMatrix());
 
   // render the loaded model
   glm::mat4 model = glm::mat4(1.0f);
@@ -43,4 +58,50 @@ void ModelLayer::OnRender() {
   shader_.SetMat4("model", model);
   model_.Draw(shader_);
 }
+
+bool ModelLayer::OnWindowResizeEvent(WindowResizeEvent& event) {
+  window_width_ = event.GetWidth();
+  window_height_ = event.GetHeight();
+  return false;
+}
+
+bool ModelLayer::OnKeyPressedEvent(KeyPressdEvent& event) {
+  switch (event.GetKeyCode()) {
+    case KeyCode::kW:
+      camera_move_ = renderer::Camera::Movement::kForward;
+      break;
+    case KeyCode::kS:
+      camera_move_ = renderer::Camera::Movement::kBackward;
+      break;
+    case KeyCode::kA:
+      camera_move_ = renderer::Camera::Movement::kLeft;
+      break;
+    case KeyCode::kD:
+      camera_move_ = renderer::Camera::Movement::kRight;
+      break;
+    default:
+      camera_move_ = renderer::Camera::Movement::kStill;
+  }
+  return false;
+}
+
+bool ModelLayer::OnMouseScrolledEvent(MouseScrolledEvent& event) {
+  static float last_x = 400;
+  static float last_y = 300;
+  static bool first = true;
+
+  auto xpos = event.GetXOffset();
+  auto ypos = event.GetYOffset();
+
+  if (first) {
+    last_x = xpos;
+    last_y = ypos;
+    first = false;
+  }
+  camera_.ProcessMouseMovement(xpos - last_x, last_y - ypos);
+  last_x = xpos;
+  last_y = ypos;
+  return false;
+}
+
 }  // namespace prototype

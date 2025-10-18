@@ -13,6 +13,7 @@ namespace prototype::renderer {
 class Camera {
  public:
   enum class Movement {
+    kStill,
     kForward,
     kBackward,
     kLeft,
@@ -32,31 +33,6 @@ class Camera {
   }
 
   float GetZoom() const { return zoom_; }
-
-  void ProcessInput() {
-    static float delta_time = 0.0f;
-    static float last_time = 0.0f;
-    if (glfwGetKey(window_, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-      glfwSetWindowShouldClose(window_, true);
-    }
-
-    float current_time = glfwGetTime();
-    delta_time = current_time - last_time;
-    last_time = current_time;
-
-    if (glfwGetKey(window_, GLFW_KEY_W) == GLFW_PRESS) {
-      ProcessKeyboard(Movement::kForward, delta_time);
-    }
-    if (glfwGetKey(window_, GLFW_KEY_S) == GLFW_PRESS) {
-      ProcessKeyboard(Movement::kBackward, delta_time);
-    }
-    if (glfwGetKey(window_, GLFW_KEY_A) == GLFW_PRESS) {
-      ProcessKeyboard(Movement::kLeft, delta_time);
-    }
-    if (glfwGetKey(window_, GLFW_KEY_D) == GLFW_PRESS) {
-      ProcessKeyboard(Movement::kRight, delta_time);
-    }
-  }
 
   // processes input received from any keyboard-like input system. Accepts input
   // parameter in the form of camera defined ENUM (to abstract it from windowing

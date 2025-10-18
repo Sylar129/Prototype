@@ -28,6 +28,8 @@ class Application {
   void Stop();
   void Clear();
 
+  void OnEvent(Event& event);
+
   void PushLayer(std::shared_ptr<Layer> layer);
 
   glm::vec2 GetFramebufferSize() const;

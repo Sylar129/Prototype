@@ -5,7 +5,7 @@
 #include <string>
 
 #include "GLFW/glfw3.h"
-#include "core/renderer/camera.h"
+#include "core/events/event.h"
 #include "glm/glm.hpp"
 
 namespace prototype::core {
@@ -18,7 +18,9 @@ struct WindowSpecification {
 
 class Window {
  public:
-  Window(const WindowSpecification& specification = WindowSpecification());
+  using EventCallbackFn = std::function<void(Event&)>;
+
+  Window(const WindowSpecification& specification);
   ~Window();
 
   void Init();
@@ -26,8 +28,8 @@ class Window {
 
   void Update();
 
-  glm::mat4 GetPorjection() const;
-  glm::mat4 GetView() const;
+  void SetEventCallback(const EventCallbackFn& callback);
+
   glm::vec2 GetFramebufferSize() const;
 
   bool ShouldClose() const;
@@ -35,10 +37,17 @@ class Window {
   GLFWwindow* GetHandle() { return handle_; }
 
  private:
-  WindowSpecification specification_;
+  struct WindowData {
+    std::string title;
+    int width;
+    int height;
+    EventCallbackFn event_callback;
+  };
+
+  void SetCallback();
 
   GLFWwindow* handle_ = nullptr;
-  renderer::Camera camera_;
+  WindowData data_;
 };
 
 }  // namespace prototype::core

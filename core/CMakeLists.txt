@@ -3,27 +3,37 @@
 #
 
 set(SOURCES
-    vendor/stb/stb_image.h
-    vendor/stb/stb_image.cpp
-    src/core/application.h
-    src/core/application.cpp
-    src/core/window.h
-    src/core/window.cpp
-    src/core/layer.h
-    src/core/log.h
-    src/core/log.cpp
-    src/core/imgui_layer.h
-    src/core/imgui_layer.cpp
-    src/core/renderer/mesh.h
+    src/core/events/application_event.h
+    src/core/events/event.h
+    src/core/events/key_codes.h
+    src/core/events/key_event.h
+    src/core/events/mouse_codes.h
+    src/core/events/mouse_event.h
+
+    src/core/renderer/camera.h
     src/core/renderer/mesh.cpp
-    src/core/renderer/model.h
+    src/core/renderer/mesh.h
     src/core/renderer/model.cpp
-    src/core/renderer/shader.h
+    src/core/renderer/model.h
     src/core/renderer/shader.cpp
-    src/core/renderer/texture.h
+    src/core/renderer/shader.h
     src/core/renderer/texture.cpp
-    src/core/renderer/utils.h
+    src/core/renderer/texture.h
     src/core/renderer/utils.cpp
+    src/core/renderer/utils.h
+
+    src/core/application.cpp
+    src/core/application.h
+    src/core/window.cpp
+    src/core/window.h
+    src/core/layer.h
+    src/core/log.cpp
+    src/core/log.h
+    src/core/imgui_layer.cpp
+    src/core/imgui_layer.h
+
+    vendor/stb/stb_image.cpp
+    vendor/stb/stb_image.h
 )
 
 add_library(core STATIC)
