@@ -6,7 +6,6 @@
 
 #include "GLFW/glfw3.h"
 #include "core/events/event.h"
-#include "core/renderer/camera.h"
 #include "glm/glm.hpp"
 
 namespace prototype::core {
@@ -31,8 +30,6 @@ class Window {
 
   void SetEventCallback(const EventCallbackFn& callback);
 
-  glm::mat4 GetPorjection() const;
-  glm::mat4 GetView() const;
   glm::vec2 GetFramebufferSize() const;
 
   bool ShouldClose() const;
@@ -51,7 +48,6 @@ class Window {
 
   GLFWwindow* handle_ = nullptr;
   WindowData data_;
-  renderer::Camera camera_;
 };
 
 }  // namespace prototype::core

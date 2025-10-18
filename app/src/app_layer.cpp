@@ -59,6 +59,8 @@ void AppLayer::OnDetach() {
   shader_.Delete();
 }
 
+void AppLayer::OnEvent(Event& event) {}
+
 void AppLayer::OnUpdate(float ts) {}
 
 void AppLayer::OnRender() {

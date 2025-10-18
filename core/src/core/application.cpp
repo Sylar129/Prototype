@@ -99,7 +99,11 @@ void Application::Clear() {
   kApplication = nullptr;
 }
 
-void Application::OnEvent(Event& event) {}
+void Application::OnEvent(Event& event) {
+  for (const auto& layer : layer_stack_) {
+    layer->OnEvent(event);
+  }
+}
 
 void Application::PushLayer(std::shared_ptr<Layer> layer) {
   layer_stack_.push_back(layer);

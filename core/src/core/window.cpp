@@ -15,8 +15,7 @@
 namespace prototype::core {
 
 Window::Window(const WindowSpecification& specification)
-    : data_(specification.title, specification.width, specification.height),
-      camera_(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 1.0f, 0.0f)) {}
+    : data_(specification.title, specification.width, specification.height) {}
 
 Window::~Window() {}
 
@@ -33,7 +32,6 @@ void Window::Init() {
     CORE_LOG_ERROR("Failed to create GLFW window!");
     assert(false);
   }
-  camera_.Init(handle_);
 
   glfwMakeContextCurrent(handle_);
   gladLoadGL(glfwGetProcAddress);
@@ -52,22 +50,11 @@ void Window::Clear() {
   handle_ = nullptr;
 }
 
-void Window::Update() {
-  camera_.ProcessInput();
-  glfwSwapBuffers(handle_);
-}
+void Window::Update() { glfwSwapBuffers(handle_); }
 
 void Window::SetEventCallback(const EventCallbackFn& callback) {
   data_.event_callback = callback;
 }
-
-glm::mat4 Window::GetPorjection() const {
-  return glm::perspective(glm::radians(camera_.GetZoom()),
-                          (float)data_.width / (float)data_.height, 0.1f,
-                          100.0f);
-}
-
-glm::mat4 Window::GetView() const { return camera_.GetViewMatrix(); }
 
 glm::vec2 Window::GetFramebufferSize() const {
   return {data_.width, data_.height};
