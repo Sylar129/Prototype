@@ -11,5 +11,4 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 include(dependencies.cmake)
 
 # Projects
-add_subdirectory(core)
-add_subdirectory(app)
+add_subdirectory(src)

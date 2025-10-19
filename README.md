@@ -30,15 +30,10 @@
 
 ```
 Prototype/
-├── app/                  # 应用层（入口与高层逻辑）
-│   ├── main.cpp
-│   └── Application.cpp
-├── core/                 # 核心框架（基础设施 / 系统模块）
-│   ├── Core.h
-│   ├── Log.h / .cpp
-│   ├── Window.h / .cpp
-│   └── EntryPoint.h
-├── vendor/               # 第三方库（GLFW / spdlog / glm 等）
+├── src/
+│   ├── app/              # 应用层（入口与高层逻辑）
+│   ├── core/             # 核心框架（基础设施 / 系统模块）
+│   └── vendor/           # 第三方库（GLFW / spdlog / glm 等）
 ├── CMakeLists.txt        # 构建脚本
 ├── .clang-format         # 代码格式规范
 └── LICENSE               # 开源许可证 (Unlicense)
