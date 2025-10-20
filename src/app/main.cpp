@@ -16,5 +16,5 @@ int main() {
   // application.PushLayer(std::make_shared<prototype::AppLayer>());
   application.PushLayer(std::make_shared<prototype::ModelLayer>());
   application.Run();
-  application.Clear();
+  application.Clean();
 }

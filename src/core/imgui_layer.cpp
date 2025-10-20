@@ -28,7 +28,7 @@ void ImguiLayer::Init(GLFWwindow* window) {
   ImGui_ImplOpenGL3_Init();
 }
 
-void ImguiLayer::Clear() {
+void ImguiLayer::Clean() {
   ImGui_ImplOpenGL3_Shutdown();
   ImGui_ImplGlfw_Shutdown();
   ImGui::DestroyContext();

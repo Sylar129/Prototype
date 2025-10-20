@@ -10,7 +10,7 @@ class ImguiLayer {
  public:
   ~ImguiLayer();
   void Init(GLFWwindow* window);
-  void Clear();
+  void Clean();
   void OnRenderBegin();
   void OnRender();
   void OnRenderEnd();

@@ -89,13 +89,13 @@ void Application::Run() {
 
 void Application::Stop() { running_ = false; }
 
-void Application::Clear() {
+void Application::Clean() {
   for (const auto& layer : layer_stack_) {
     layer->OnDetach();
   }
   layer_stack_.clear();
-  imgui_layer_->Clear();
-  window_->Clear();
+  imgui_layer_->Clean();
+  window_->Clean();
 
   glfwTerminate();
 

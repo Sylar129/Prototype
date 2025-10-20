@@ -24,7 +24,7 @@ class Window {
   ~Window();
 
   void Init();
-  void Clear();
+  void Clean();
 
   void Update();
 

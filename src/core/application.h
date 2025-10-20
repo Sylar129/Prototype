@@ -26,15 +26,13 @@ class Application {
   void Init();
   void Run();
   void Stop();
-  void Clear();
+  void Clean();
 
   void OnEvent(Event& event);
 
   void PushLayer(std::shared_ptr<Layer> layer);
 
   glm::vec2 GetFramebufferSize() const;
-
-  const Window& GetWindow() const { return *window_; }
 
   static Application& Get();
   static float GetTime();

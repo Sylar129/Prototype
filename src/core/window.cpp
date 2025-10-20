@@ -42,7 +42,7 @@ void Window::Init() {
   SetCallback();
 }
 
-void Window::Clear() {
+void Window::Clean() {
   if (handle_) {
     glfwDestroyWindow(handle_);
   }
