@@ -3,9 +3,11 @@
 #include "core/renderer/utils.h"
 
 #include "core/log.h"
+#include "glad/gl.h"
 
 namespace prototype::renderer::utils {
 
+namespace {
 const char* GLDebugSourceToString(GLenum source) {
   switch (source) {
     case GL_DEBUG_SOURCE_API:
@@ -60,21 +62,22 @@ const char* GLDebugSeverityToString(GLenum severity) {
   }
 }
 
-static void GLDebugCallback(GLenum source, GLenum type, GLuint id,
-                            GLenum severity, GLsizei length,
-                            const GLchar* message, const void* userParam) {
+void GLDebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity,
+                     GLsizei length, const GLchar* message,
+                     const void* user_param) {
   // TODO: Custom filters
   if (severity != GL_DEBUG_SEVERITY_MEDIUM &&
       severity != GL_DEBUG_SEVERITY_HIGH)
     return;
 
-  const char* sourceStr = utils::GLDebugSourceToString(source);
-  const char* typeStr = utils::GLDebugTypeToString(type);
-  const char* severityStr = utils::GLDebugSeverityToString(severity);
+  const char* source_str = utils::GLDebugSourceToString(source);
+  const char* type_str = utils::GLDebugTypeToString(type);
+  const char* severity_str = utils::GLDebugSeverityToString(severity);
 
-  CORE_LOG_TRACE("[OpenGL] [{} - {} ({})]: [{}] {}", severityStr, typeStr, id,
-                 sourceStr, message);
+  CORE_LOG_TRACE("[OpenGL] [{} - {} ({})]: [{}] {}", severity_str, type_str, id,
+                 source_str, message);
 }
+}  // namespace
 
 void InitOpenGLDebugMessageCallback() {
   glDebugMessageCallback(GLDebugCallback, nullptr);
