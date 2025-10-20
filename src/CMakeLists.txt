@@ -10,6 +10,7 @@ set(CORE_SOURCES
     core/events/mouse_codes.h
     core/events/mouse_event.h
 
+    core/renderer/camera.cpp
     core/renderer/camera.h
     core/renderer/mesh.cpp
     core/renderer/mesh.h
