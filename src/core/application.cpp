@@ -7,7 +7,7 @@
 // clang-format off
 #include "glad/gl.h"
 #include "GLFW/glfw3.h"
-// clang-format off
+// clang-format on
 #include "core/imgui_layer.h"
 #include "core/log.h"
 #include "core/renderer/utils.h"
@@ -54,27 +54,29 @@ void Application::Run() {
 
   // Main Application loop
   while (running_) {
-    glClearColor(0, 0, 0, 1.0);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
     if (window_->ShouldClose()) {
       Stop();
       break;
     }
 
-    imgui_layer_->OnRenderBegin();
-    // imgui_layer_->OnRender();
+    glClearColor(0, 0, 0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    // event
+    glfwPollEvents();
+
+    // update
     float current_time = GetTime();
     float timestep = glm::clamp(current_time - last_time, 0.001f, 0.1f);
     last_time = current_time;
 
-    glfwPollEvents();
-
-    // Main layer update here
     for (const auto& layer : layer_stack_) {
       layer->OnUpdate(timestep);
     }
+
+    // render
+    imgui_layer_->OnRenderBegin();
+    // imgui_layer_->OnRender();
 
     // NOTE: rendering can be done elsewhere (eg. render thread)
     for (const auto& layer : layer_stack_) {
@@ -111,10 +113,6 @@ void Application::OnEvent(Event& event) {
 void Application::PushLayer(std::shared_ptr<Layer> layer) {
   layer_stack_.push_back(layer);
   layer->OnAttach();
-}
-
-glm::vec2 Application::GetFramebufferSize() const {
-  return window_->GetFramebufferSize();
 }
 
 Application& Application::Get() {
