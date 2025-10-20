@@ -2,8 +2,6 @@
 
 #pragma once
 
-#include <stdint.h>
-
 #include "core/events/application_event.h"
 #include "core/events/key_event.h"
 #include "core/events/mouse_event.h"
@@ -21,7 +19,7 @@ class ModelLayer : public core::Layer {
 
   virtual void OnAttach() override;
   virtual void OnDetach() override;
-  virtual void OnEvent(Event& event);
+  virtual void OnEvent(Event& event) override;
   virtual void OnUpdate(float ts) override;
   virtual void OnRender() override;
 

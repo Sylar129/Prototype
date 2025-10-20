@@ -31,9 +31,6 @@ set(CORE_SOURCES
     core/log.h
     core/imgui_layer.cpp
     core/imgui_layer.h
-
-    vendor/stb/stb_image.cpp
-    vendor/stb/stb_image.h
 )
 
 add_library(core STATIC)
@@ -50,6 +47,7 @@ target_link_libraries(core glad)
 target_link_libraries(core glm)
 target_link_libraries(core imguilib)
 target_link_libraries(core assimp)
+target_link_libraries(core stb_image)
 
 #
 # app
@@ -67,7 +65,7 @@ target_sources(app PRIVATE ${APP_SOURCES})
 
 target_link_libraries(app core)
 
-include_directories(PUBLIC "." "vendor/")
+include_directories(PUBLIC "." "${CMAKE_SOURCE_DIR}/vendor")
 
 # Set working directory for VS debugger
 set_target_properties(app PROPERTIES

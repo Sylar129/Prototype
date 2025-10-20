@@ -2,8 +2,6 @@
 
 #include "model_layer.h"
 
-#include "GLFW/glfw3.h"
-#include "core/application.h"
 #include "core/renderer/model.h"
 #include "core/renderer/shader.h"
 #include "glm/ext/matrix_clip_space.hpp"

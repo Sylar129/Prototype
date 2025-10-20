@@ -2,6 +2,7 @@
 # Dependencies
 #
 include(FetchContent)
+set(FETCHCONTENT_BASE_DIR ${CMAKE_SOURCE_DIR}/vendor)
 
 # spdlog
 FetchContent_Declare(
@@ -85,3 +86,10 @@ FetchContent_Declare(
     DOWNLOAD_EXTRACT_TIMESTAMP OFF
 )
 FetchContent_MakeAvailable(assimp)
+
+# stb_image
+set(stb_imageSrc
+    ${FETCHCONTENT_BASE_DIR}/stb/stb_image.cpp
+    ${FETCHCONTENT_BASE_DIR}/stb/stb_image.h
+    )
+add_library(stb_image STATIC ${stb_imageSrc})
