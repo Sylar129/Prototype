@@ -8,50 +8,10 @@
 
 namespace prototype::renderer {
 
-namespace {
-unsigned int TextureFromFile(const char* path, const std::string& directory) {
-  std::string filename = std::string(path);
-  filename = directory + '/' + filename;
-
-  unsigned int textureID;
-  glGenTextures(1, &textureID);
-
-  int width, height, nrComponents;
-  stbi_set_flip_vertically_on_load(true);
-  unsigned char* data =
-      stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
-  if (data) {
-    GLenum format;
-    if (nrComponents == 1)
-      format = GL_RED;
-    else if (nrComponents == 3)
-      format = GL_RGB;
-    else if (nrComponents == 4)
-      format = GL_RGBA;
-
-    glBindTexture(GL_TEXTURE_2D, textureID);
-    glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format,
-                 GL_UNSIGNED_BYTE, data);
-    glGenerateMipmap(GL_TEXTURE_2D);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-                    GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    stbi_image_free(data);
-  } else {
-    CORE_LOG_ERROR("Texture failed to load at path: {}", path);
-    stbi_image_free(data);
-  }
-
-  return textureID;
-}
-}  // namespace
-
 // constructor, expects a filepath to a 3D model.
-Model::Model(const std::string& path) { LoadModel(path); }
+Model::Model(const std::filesystem::path& path) : model_path_(path) {
+  LoadModel(path);
+}
 
 // draws the model, and thus all its meshes
 void Model::Draw(Shader& shader) {
@@ -62,12 +22,12 @@ void Model::Draw(Shader& shader) {
 
 // loads a model with supported ASSIMP extensions from file and stores the
 // resulting meshes in the meshes vector.
-void Model::LoadModel(const std::string& path) {
+void Model::LoadModel(const std::filesystem::path& path) {
   // read file via ASSIMP
   Assimp::Importer importer;
   const aiScene* scene = importer.ReadFile(
-      path, aiProcess_Triangulate | aiProcess_GenSmoothNormals |
-                aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+      path.string(), aiProcess_Triangulate | aiProcess_GenSmoothNormals |
+                         aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
   // check for errors
   if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE ||
       !scene->mRootNode)  // if is Not Zero
@@ -75,8 +35,6 @@ void Model::LoadModel(const std::string& path) {
     CORE_LOG_ERROR("ERROR::ASSIMP:: {}", importer.GetErrorString());
     return;
   }
-  // retrieve the directory path of the filepath
-  directory_ = path.substr(0, path.find_last_of('/'));
 
   // process ASSIMP's root node recursively
   ProcessNode(scene->mRootNode, scene);
@@ -105,7 +63,6 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
   // data to fill
   std::vector<Vertex> vertices;
   std::vector<unsigned int> indices;
-  std::vector<Texture> textures;
 
   // walk through each of the mesh's vertices
   for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
@@ -172,56 +129,43 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
   // normal: texture_normalN
 
   // 1. diffuse maps
-  std::vector<Texture> diffuseMaps =
-      LoadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
-  textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
+  auto diffuse_maps = LoadMaterialTextures(material, aiTextureType_DIFFUSE);
   // 2. specular maps
-  std::vector<Texture> specularMaps = LoadMaterialTextures(
-      material, aiTextureType_SPECULAR, "texture_specular");
-  textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+  auto specular_maps = LoadMaterialTextures(material, aiTextureType_SPECULAR);
   // 3. normal maps
-  std::vector<Texture> normalMaps =
-      LoadMaterialTextures(material, aiTextureType_NORMALS, "texture_normal");
-  textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
+  auto normal_maps = LoadMaterialTextures(material, aiTextureType_NORMALS);
   // 4. height maps
-  std::vector<Texture> heightMaps =
-      LoadMaterialTextures(material, aiTextureType_HEIGHT, "texture_height");
-  textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
+  auto height_maps = LoadMaterialTextures(material, aiTextureType_HEIGHT);
 
   // return a mesh object created from the extracted mesh data
-  return Mesh(vertices, indices, textures);
+  return Mesh(vertices, indices, diffuse_maps);
 }
 
 // checks all material textures of a given type and loads the textures if
 // they're not loaded yet. the required info is returned as a Texture struct.
 std::vector<Texture> Model::LoadMaterialTextures(aiMaterial* mat,
-                                                 aiTextureType type,
-                                                 const std::string& type_name) {
+                                                 aiTextureType type) {
   std::vector<Texture> textures;
   for (unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
     aiString str;
     mat->GetTexture(type, i, &str);
+
     // check if texture was loaded before and if so, continue to next
     // iteration: skip loading a new texture
-    bool skip = false;
-    for (unsigned int j = 0; j < textures_loaded_.size(); j++) {
-      if (textures_loaded_[j].path == str.C_Str()) {
-        textures.push_back(textures_loaded_[j]);
-        skip = true;  // a texture with the same filepath has already been
-                      // loaded, continue to next one. (optimization)
-        break;
-      }
+    auto loaded = std::find_if(textures_loaded_.begin(), textures_loaded_.end(),
+                               [&str](const auto& loaded) {
+                                 return loaded == str.C_Str();
+                               }) != textures_loaded_.end();
+    if (loaded) {
+      continue;
     }
-    if (!skip) {  // if texture hasn't been loaded already, load it
-      Texture texture;
-      texture.handle = TextureFromFile(str.C_Str(), this->directory_);
-      texture.type = type_name;
-      texture.path = str.C_Str();
-      textures.push_back(texture);
-      textures_loaded_.push_back(
-          texture);  // store it as texture loaded for entire model, to ensure
-                     // we won't unnecessary load duplicate textures.
-    }
+
+    Texture texture =
+        LoadTexture(model_path_.replace_filename(str.C_Str()), true);
+    textures.push_back(texture);
+    textures_loaded_.push_back(
+        str.C_Str());  // store it as texture loaded for entire model, to ensure
+                       // we won't unnecessary load duplicate textures.
   }
   return textures;
 }

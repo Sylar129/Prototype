@@ -40,7 +40,10 @@ class Mesh {
   void SetupMesh();
   std::vector<Vertex> vertices_;
   std::vector<unsigned int> indices_;
-  std::vector<Texture> textures_;
+  std::vector<Texture> diiffuse_maps_;
+  std::vector<Texture> specular_maps_;
+  std::vector<Texture> normal_maps_;
+  std::vector<Texture> height_maps_;
   unsigned int vao_, vbo_, ebo_;
 };
 

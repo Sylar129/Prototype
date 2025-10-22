@@ -7,6 +7,7 @@
 #include "core/events/mouse_event.h"
 #include "core/layer.h"
 #include "core/renderer/camera.h"
+#include "core/renderer/framebuffer.h"
 #include "core/renderer/model.h"
 #include "core/renderer/shader.h"
 
@@ -37,6 +38,7 @@ class ModelLayer : public core::Layer {
   renderer::Camera camera_;
   renderer::Camera::Movement camera_move_;
   bool camera_can_move_ = false;
+  renderer::Framebuffer framebuffer_;
 
   int window_width_ = 0;
   int window_height_ = 0;

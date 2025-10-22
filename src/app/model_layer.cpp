@@ -7,18 +7,20 @@
 #include "glm/ext/matrix_clip_space.hpp"
 #include "glm/ext/matrix_transform.hpp"
 #include "glm/glm.hpp"
+#include "imgui.h"
 
 namespace prototype {
 
 ModelLayer::ModelLayer()
     : model_("assets/models/backpack/backpack.obj"),
-      camera_(glm::vec3(0.0f, 0.0f, 20.0f), glm::vec3(0.0f, 1.0f, 0.0f)) {}
+      camera_(glm::vec3(0.0f, 0.0f, 20.0f)) {}
 
 ModelLayer::~ModelLayer() {}
 
 void ModelLayer::OnAttach() {
   // Create shaders
   shader_.Compile("assets/shaders/model.vert", "assets/shaders/model.frag");
+  framebuffer_ = renderer::CreateFrameBuffer();
 }
 
 void ModelLayer::OnDetach() { shader_.Delete(); }
@@ -39,6 +41,9 @@ void ModelLayer::OnUpdate(float ts) {
 }
 
 void ModelLayer::OnRender() {
+  camera_.DrawController();
+  framebuffer_.Bind();
+
   shader_.Use();
 
   auto projection = glm::perspective(glm::radians(camera_.GetZoom()),
@@ -58,6 +63,17 @@ void ModelLayer::OnRender() {
                 1.0f));  // it's a bit too big for our scene, so scale it down
   shader_.SetMat4("model", model);
   model_.Draw(shader_);
+  framebuffer_.Unbind();
+
+  {
+    ImGui::Begin("Image");
+
+    ImGui::Text("This is Image");
+    // flip uv here
+    ImGui::Image(framebuffer_.color_attachment, {1920, 1080}, {0, 1}, {1, 0});
+
+    ImGui::End();
+  }
 }
 
 bool ModelLayer::OnWindowResizeEvent(WindowResizeEvent& event) {

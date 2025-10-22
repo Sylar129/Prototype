@@ -16,13 +16,15 @@ class Camera {
     kRight,
   };
 
-  Camera(const glm::vec3& pos, const glm::vec3& up);
+  explicit Camera(const glm::vec3& pos);
 
   glm::vec3 GetPosition() const;
 
   glm::mat4 GetViewMatrix() const;
 
   float GetZoom() const;
+
+  void DrawController();
 
   // processes input received from any keyboard-like input system. Accepts input
   // parameter in the form of camera defined ENUM (to abstract it from windowing
@@ -45,7 +47,6 @@ class Camera {
   glm::vec3 front_;
   glm::vec3 up_;
   glm::vec3 right_;
-  glm::vec3 world_up_;
 
   float yaw_ = -90.0f;
   float pitch_ = 0.0f;

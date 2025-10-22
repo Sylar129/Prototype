@@ -5,12 +5,11 @@
 #include <algorithm>
 
 #include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtc/type_ptr.hpp"
+#include "imgui.h"
 
 namespace prototype::renderer {
-Camera::Camera(const glm::vec3& pos, const glm::vec3& up)
-    : pos_(pos), world_up_(up) {
-  UpdateCameraVectors();
-}
+Camera::Camera(const glm::vec3& pos) : pos_(pos) { UpdateCameraVectors(); }
 
 glm::vec3 Camera::GetPosition() const { return pos_; }
 
@@ -19,6 +18,21 @@ glm::mat4 Camera::GetViewMatrix() const {
 }
 
 float Camera::GetZoom() const { return zoom_; }
+
+void Camera::DrawController() {
+  ImGui::Begin("Camera Controller");
+
+  ImGui::Text("This is Camera Controller");
+  ImGui::SliderFloat3("Position", glm::value_ptr(pos_), -100, 100);
+  ImGui::SliderFloat3("Front", glm::value_ptr(front_), -1, 1);
+  ImGui::SliderFloat("Zoom", &zoom_, 1, 100);
+  if (ImGui::Button("Reset")) {
+    pos_ = {0, 0, 20};
+    zoom_ = 45;
+  }
+
+  ImGui::End();
+}
 
 // processes input received from any keyboard-like input system. Accepts input
 // parameter in the form of camera defined ENUM (to abstract it from windowing
@@ -63,10 +77,11 @@ void Camera::UpdateCameraVectors() {
   front.z = sin(glm::radians(yaw_)) * cos(glm::radians(pitch_));
   front_ = glm::normalize(front);
   // also re-calculate the Right and Up vector
+  constexpr glm::vec3 kWorldUp = {0, 1, 0};
   right_ = glm::normalize(glm::cross(
-      front_, world_up_));  // normalize the vectors, because their length
-                            // gets closer to 0 the more you look up or down
-                            // which results in slower movement.
+      front_, kWorldUp));  // normalize the vectors, because their length
+                           // gets closer to 0 the more you look up or down
+                           // which results in slower movement.
   up_ = glm::normalize(glm::cross(right_, front_));
 }
 }  // namespace prototype::renderer

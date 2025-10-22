@@ -7,30 +7,40 @@ namespace prototype::renderer {
 Mesh::Mesh(const std::vector<Vertex>& vertices,
            const std::vector<unsigned int>& indices,
            const std::vector<Texture>& textures)
-    : vertices_(vertices), indices_(indices), textures_(textures) {
+    : vertices_(vertices), indices_(indices), diiffuse_maps_(textures) {
   SetupMesh();
 }
 
 void Mesh::Draw(Shader& shader) {
-  unsigned int diffuseNr = 1;
-  unsigned int specularNr = 1;
-  for (unsigned int i = 0; i < textures_.size(); i++) {
-    glActiveTexture(GL_TEXTURE0 + i);
+  int texture_num = 0;
 
-    std::string number;
-    std::string name = textures_[i].type;
-    if (name == "texture_diffuse")
-      number = std::to_string(diffuseNr++);
-    else if (name == "texture_specular")
-      number = std::to_string(specularNr++);
+  unsigned int diffuse_num = 1;
+  for (const auto& texture : diiffuse_maps_) {
+    glActiveTexture(GL_TEXTURE0 + texture_num);
 
-    shader.SetInt(("material." + name + number).c_str(), i);
-    glBindTexture(GL_TEXTURE_2D, textures_[i].handle);
+    shader.SetInt(
+        ("material.texture_diffuse" + std::to_string(diffuse_num++)).c_str(),
+        texture_num);
+    glBindTexture(GL_TEXTURE_2D, texture.handle);
+    texture_num++;
   }
+
+  unsigned int specular_num = 1;
+  for (const auto& texture : specular_maps_) {
+    glActiveTexture(GL_TEXTURE0 + texture_num);
+
+    shader.SetInt(
+        ("material.texture_specular" + std::to_string(specular_num++)).c_str(),
+        texture_num);
+    glBindTexture(GL_TEXTURE_2D, texture.handle);
+    texture_num++;
+  }
+
   glActiveTexture(GL_TEXTURE0);
 
   glBindVertexArray(vao_);
-  glDrawElements(GL_TRIANGLES, indices_.size(), GL_UNSIGNED_INT, 0);
+  glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(indices_.size()),
+                 GL_UNSIGNED_INT, 0);
   glBindVertexArray(0);
 }
 

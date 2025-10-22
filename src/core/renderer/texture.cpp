@@ -26,9 +26,11 @@ Texture CreateTexture(int width, int height) {
   return result;
 }
 
-Texture LoadTexture(const std::filesystem::path& path) {
+Texture LoadTexture(const std::filesystem::path& path, bool flip_vertically) {
   int width, height, channels;
   std::string filepath = path.string();
+
+  stbi_set_flip_vertically_on_load(flip_vertically);
   unsigned char* data =
       stbi_load(filepath.c_str(), &width, &height, &channels, 0);
 
@@ -64,44 +66,6 @@ Texture LoadTexture(const std::filesystem::path& path) {
   stbi_image_free(data);
 
   return result;
-}
-
-Framebuffer CreateFramebufferWithTexture(const Texture& texture) {
-  Framebuffer result;
-
-  glCreateFramebuffers(1, &result.handle);
-
-  if (!AttachTextureToFramebuffer(result, texture)) {
-    glDeleteFramebuffers(1, &result.handle);
-    return {};
-  }
-
-  return result;
-}
-
-bool AttachTextureToFramebuffer(Framebuffer& framebuffer,
-                                const Texture& texture) {
-  glNamedFramebufferTexture(framebuffer.handle, GL_COLOR_ATTACHMENT0,
-                            texture.handle, 0);
-
-  if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-    CORE_LOG_ERROR("Framebuffer is not complete!");
-    return false;
-  }
-
-  framebuffer.color_attachment = texture;
-  return true;
-}
-
-void BlitFramebufferToSwapchain(const Framebuffer& framebuffer) {
-  glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer.handle);
-  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);  // swapchain
-
-  glBlitFramebuffer(0, 0, framebuffer.color_attachment.width,
-                    framebuffer.color_attachment.height,  // Source rect
-                    0, 0, framebuffer.color_attachment.width,
-                    framebuffer.color_attachment.height,  // Destination rect
-                    GL_COLOR_BUFFER_BIT, GL_NEAREST);
 }
 
 }  // namespace prototype::renderer

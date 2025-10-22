@@ -76,7 +76,7 @@ set(imguiSrc
     ${imgui_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp
     ${imgui_SOURCE_DIR}/backends/imgui_impl_opengl3.h
     ${imgui_SOURCE_DIR}/backends/imgui_impl_opengl3_loader.h
-    )
+)
 add_library(imguilib STATIC ${imguiSrc})
 
 # assimp
@@ -91,5 +91,5 @@ FetchContent_MakeAvailable(assimp)
 set(stb_imageSrc
     ${FETCHCONTENT_BASE_DIR}/stb/stb_image.cpp
     ${FETCHCONTENT_BASE_DIR}/stb/stb_image.h
-    )
+)
 add_library(stb_image STATIC ${stb_imageSrc})
