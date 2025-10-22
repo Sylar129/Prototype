@@ -25,6 +25,8 @@ set(CORE_SOURCES
     core/renderer/utils.cpp
     core/renderer/utils.h
 
+    core/utils/thread_pool.h
+
     core/application.cpp
     core/application.h
     core/window.cpp
