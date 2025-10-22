@@ -10,6 +10,7 @@
 #include "core/renderer/framebuffer.h"
 #include "core/renderer/model.h"
 #include "core/renderer/shader.h"
+#include "imgui.h"
 
 namespace prototype {
 
@@ -39,6 +40,7 @@ class ModelLayer : public core::Layer {
   renderer::Camera::Movement camera_move_;
   bool camera_can_move_ = false;
   renderer::Framebuffer framebuffer_;
+  ImVec2 viewport_size_;
 
   int window_width_ = 0;
   int window_height_ = 0;

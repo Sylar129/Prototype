@@ -38,12 +38,8 @@ void ModelLayer::OnEvent(Event& event) {
 
 void ModelLayer::OnUpdate(float ts) {
   camera_.ProcessKeyboard(camera_move_, ts);
-}
 
-void ModelLayer::OnRender() {
-  camera_.DrawController();
   framebuffer_.Bind();
-
   shader_.Use();
 
   auto projection = glm::perspective(glm::radians(camera_.GetZoom()),
@@ -64,16 +60,19 @@ void ModelLayer::OnRender() {
   shader_.SetMat4("model", model);
   model_.Draw(shader_);
   framebuffer_.Unbind();
+}
 
-  {
-    ImGui::Begin("Image");
+void ModelLayer::OnRender() {
+  ImGui::Begin("Image");
 
-    ImGui::Text("This is Image");
-    // flip uv here
-    ImGui::Image(framebuffer_.color_attachment, {1920, 1080}, {0, 1}, {1, 0});
+  camera_.DrawController();
 
-    ImGui::End();
-  }
+  ImVec2 viewport_panel_size = ImGui::GetContentRegionAvail();
+  viewport_size_ = {viewport_panel_size.x, viewport_panel_size.y};
+  // flip uv here
+  ImGui::Image(framebuffer_.color_attachment, viewport_size_, {0, 1}, {1, 0});
+
+  ImGui::End();
 }
 
 bool ModelLayer::OnWindowResizeEvent(WindowResizeEvent& event) {
