@@ -20,8 +20,6 @@ glm::mat4 Camera::GetViewMatrix() const {
 float Camera::GetZoom() const { return zoom_; }
 
 void Camera::DrawController() {
-  ImGui::Begin("Camera Controller");
-
   ImGui::Text("This is Camera Controller");
   ImGui::SliderFloat3("Position", glm::value_ptr(pos_), -100, 100);
   ImGui::SliderFloat3("Front", glm::value_ptr(front_), -1, 1);
@@ -30,8 +28,6 @@ void Camera::DrawController() {
     pos_ = {0, 0, 20};
     zoom_ = 45;
   }
-
-  ImGui::End();
 }
 
 // processes input received from any keyboard-like input system. Accepts input
