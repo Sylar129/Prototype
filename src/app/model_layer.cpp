@@ -56,16 +56,16 @@ void ModelLayer::OnUpdate(float ts) {
 void ModelLayer::OnRender() {
   ImGui::Begin("viewport");
 
-  ImGui::Begin("Camera Controller");
-  camera_.DrawController();
-  model_transform_.DrawMenu("Model Transform");
-  ImGui::End();
-
   ImVec2 viewport_panel_size = ImGui::GetContentRegionAvail();
   viewport_size_ = {viewport_panel_size.x, viewport_panel_size.y};
   // flip uv here
   ImGui::Image(framebuffer_.color_attachment, viewport_size_, {0, 1}, {1, 0});
 
+  ImGui::End();
+
+  ImGui::Begin("Camera Controller");
+  camera_.DrawController();
+  model_transform_.DrawMenu("Model Transform");
   ImGui::End();
 }
 

@@ -3,10 +3,12 @@
 #include "core/renderer/camera.h"
 
 #include <algorithm>
+#include <typeinfo>
 
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
 #include "imgui.h"
+#include "imgui_internal.h"
 
 namespace prototype::renderer {
 Camera::Camera(const glm::vec3& pos) : pos_(pos) { UpdateCameraVectors(); }
@@ -20,13 +22,30 @@ glm::mat4 Camera::GetViewMatrix() const {
 float Camera::GetZoom() const { return zoom_; }
 
 void Camera::DrawController() {
-  ImGui::Text("This is Camera Controller");
-  ImGui::SliderFloat3("Position", glm::value_ptr(pos_), -100, 100);
-  ImGui::SliderFloat3("Front", glm::value_ptr(front_), -1, 1);
-  ImGui::SliderFloat("Zoom", &zoom_, 1, 100);
-  if (ImGui::Button("Reset")) {
-    pos_ = {0, 0, 20};
-    zoom_ = 45;
+  constexpr ImGuiTreeNodeFlags kTreeNodeFlags =
+      ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowOverlap |
+      ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth |
+      ImGuiTreeNodeFlags_FramePadding;
+
+  ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{4, 4});
+  float line_height =
+      GImGui->Font->LegacySize + GImGui->Style.FramePadding.y * 2.0f;
+  ImGui::Separator();
+  // NOLINTNEXTLINE
+  bool open = ImGui::TreeNodeEx((void*)typeid(Camera).hash_code(),
+                                kTreeNodeFlags, "%s", "Camera");
+  ImGui::PopStyleVar();
+
+  if (open) {
+    ImGui::Text("This is Camera Controller");
+    ImGui::SliderFloat3("Position", glm::value_ptr(pos_), -100, 100);
+    ImGui::SliderFloat3("Front", glm::value_ptr(front_), -1, 1);
+    ImGui::SliderFloat("Zoom", &zoom_, 1, 100);
+    if (ImGui::Button("Reset")) {
+      pos_ = {0, 0, 20};
+      zoom_ = 45;
+    }
+    ImGui::TreePop();
   }
 }
 
