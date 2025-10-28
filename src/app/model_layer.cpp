@@ -7,7 +7,6 @@
 #include "core/renderer/shader.h"
 #include "glm/ext/matrix_clip_space.hpp"
 #include "imgui.h"
-#include "imgui_internal.h"
 
 namespace prototype {
 
