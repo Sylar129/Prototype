@@ -11,117 +11,6 @@
 
 namespace prototype {
 
-namespace {
-void DrawVec3Control(const std::string& label, glm::vec3& values,
-                     float reset_value = 0.0f, float column_width = 100.0f) {
-  ImGuiIO& io = ImGui::GetIO();
-
-  ImGui::PushID(label.c_str());
-
-  ImGui::Columns(2);
-  ImGui::SetColumnWidth(0, column_width);
-  ImGui::Text("%s", label.c_str());
-  ImGui::NextColumn();
-
-  ImGui::PushMultiItemsWidths(3, ImGui::CalcItemWidth());
-  ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{0, 0});
-
-  float line_height =
-      GImGui->Font->LegacySize + GImGui->Style.FramePadding.y * 2.0f;
-  ImVec2 button_size = {line_height + 3.0f, line_height};
-
-  // X Button
-  ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{0.8f, 0.1f, 0.15f, 1.0f});
-  ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{0.9f, 0.2f, 0.2f, 1.0f});
-  ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{0.8f, 0.1f, 0.15f, 1.0f});
-  if (ImGui::Button("X", button_size)) {
-    values.x = reset_value;
-  }
-  ImGui::PopStyleColor(3);
-
-  ImGui::SameLine();
-  ImGui::DragFloat("##X", &values.x, 0.1f, 0.0f, 0.0f, "%.2f");
-  ImGui::PopItemWidth();
-  ImGui::SameLine();
-
-  // Y Button
-  ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{0.2f, 0.7f, 0.3f, 1.0f});
-  ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{0.3f, 0.8f, 0.3f, 1.0f});
-  ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{0.2f, 0.7f, 0.2f, 1.0f});
-  if (ImGui::Button("Y", button_size)) {
-    values.y = reset_value;
-  }
-  ImGui::PopStyleColor(3);
-
-  ImGui::SameLine();
-  ImGui::DragFloat("##Y", &values.y, 0.1f, 0.0f, 0.0f, "%.2f");
-  ImGui::PopItemWidth();
-  ImGui::SameLine();
-
-  // Z Button
-  ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{0.1f, 0.25f, 0.8f, 1.0f});
-  ImGui::PushStyleColor(ImGuiCol_ButtonHovered,
-                        ImVec4{0.2f, 0.35f, 0.9f, 1.0f});
-  ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4{0.1f, 0.25f, 0.8f, 1.0f});
-  if (ImGui::Button("Z", button_size)) {
-    values.z = reset_value;
-  }
-  ImGui::PopStyleColor(3);
-
-  ImGui::SameLine();
-  ImGui::DragFloat("##Z", &values.z, 0.1f, 0.0f, 0.0f, "%.2f");
-  ImGui::PopItemWidth();
-
-  ImGui::PopStyleVar();
-
-  ImGui::Columns(1);
-
-  ImGui::PopID();
-}
-
-template <typename T, typename UIFunction>
-void DrawComponent(const std::string& label, T& component,
-                   UIFunction ui_function) {
-  constexpr ImGuiTreeNodeFlags kTreeNodeFlags =
-      ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowOverlap |
-      ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth |
-      ImGuiTreeNodeFlags_FramePadding;
-
-  ImVec2 content_region_available = ImGui::GetContentRegionAvail();
-
-  ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{4, 4});
-  float line_height =
-      GImGui->Font->LegacySize + GImGui->Style.FramePadding.y * 2.0f;
-  ImGui::Separator();
-  // NOLINTNEXTLINE
-  bool open = ImGui::TreeNodeEx((void*)typeid(T).hash_code(), kTreeNodeFlags,
-                                "%s", label.c_str());
-  ImGui::PopStyleVar();
-
-  ImGui::SameLine(content_region_available.x - line_height * 0.5f);
-  if (ImGui::Button("+", ImVec2{line_height, line_height})) {
-    ImGui::OpenPopup("ComponentSettings");
-  }
-
-  if (open) {
-    ui_function(component);
-    ImGui::TreePop();
-  }
-}
-
-void DrawTransformMenu(TransformComponent& transform) {
-  DrawComponent("Transform", transform, [](TransformComponent& component) {
-    DrawVec3Control("Translation", component.translation);
-
-    glm::vec3 rotation = glm::degrees(component.rotation);
-    DrawVec3Control("Rotation", rotation);
-    component.rotation = glm::radians(rotation);
-
-    DrawVec3Control("Scale", component.scale, 1.0f);
-  });
-}
-}  // namespace
-
 ModelLayer::ModelLayer()
     : model_("assets/models/backpack/backpack.obj"),
       camera_(glm::vec3(0.0f, 0.0f, 20.0f)),
@@ -170,7 +59,7 @@ void ModelLayer::OnRender() {
 
   ImGui::Begin("Camera Controller");
   camera_.DrawController();
-  DrawTransformMenu(model_transform_);
+  model_transform_.DrawMenu("Model Transform");
   ImGui::End();
 
   ImVec2 viewport_panel_size = ImGui::GetContentRegionAvail();
