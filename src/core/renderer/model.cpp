@@ -27,7 +27,7 @@ void Model::LoadModel(const std::filesystem::path& path) {
   Assimp::Importer importer;
   const aiScene* scene = importer.ReadFile(
       path.string(), aiProcess_Triangulate | aiProcess_GenSmoothNormals |
-                         aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+                         aiProcess_CalcTangentSpace);
   // check for errors
   if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE ||
       !scene->mRootNode)  // if is Not Zero
@@ -160,8 +160,7 @@ std::vector<Texture> Model::LoadMaterialTextures(aiMaterial* mat,
       continue;
     }
 
-    Texture texture =
-        LoadTexture(model_path_.replace_filename(str.C_Str()), true);
+    Texture texture = LoadTexture(model_path_.replace_filename(str.C_Str()));
     textures.push_back(texture);
     textures_loaded_.push_back(
         str.C_Str());  // store it as texture loaded for entire model, to ensure
