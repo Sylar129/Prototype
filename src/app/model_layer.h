@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "core/components/transform.h"
 #include "core/events/application_event.h"
 #include "core/events/key_event.h"
 #include "core/events/mouse_event.h"
@@ -36,6 +37,7 @@ class ModelLayer : public core::Layer {
 
   renderer::Shader shader_;
   renderer::Model model_;
+  TransformComponent model_transform_;
   renderer::Camera camera_;
   renderer::Camera::Movement camera_move_;
   bool camera_can_move_ = false;

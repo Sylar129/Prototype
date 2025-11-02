@@ -3,6 +3,9 @@
 #
 
 set(CORE_SOURCES
+    core/components/transform.cpp
+    core/components/transform.h
+
     core/events/application_event.h
     core/events/event.h
     core/events/key_codes.h

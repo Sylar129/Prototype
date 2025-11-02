@@ -2,18 +2,18 @@
 
 #include "model_layer.h"
 
+#include "core/components/transform.h"
 #include "core/renderer/model.h"
 #include "core/renderer/shader.h"
 #include "glm/ext/matrix_clip_space.hpp"
-#include "glm/ext/matrix_transform.hpp"
-#include "glm/glm.hpp"
 #include "imgui.h"
 
 namespace prototype {
 
 ModelLayer::ModelLayer()
     : model_("assets/models/backpack/backpack.obj"),
-      camera_(glm::vec3(0.0f, 0.0f, 20.0f)) {}
+      camera_(glm::vec3(0.0f, 0.0f, 20.0f)),
+      viewport_size_(1920, 1080) {}
 
 ModelLayer::~ModelLayer() {}
 
@@ -48,30 +48,24 @@ void ModelLayer::OnUpdate(float ts) {
   shader_.SetMat4("view", camera_.GetViewMatrix());
 
   // render the loaded model
-  glm::mat4 model = glm::mat4(1.0f);
-  model = glm::translate(
-      model,
-      glm::vec3(0.0f, 0.0f,
-                0.0f));  // translate it down so it's at the center of the scene
-  model = glm::scale(
-      model,
-      glm::vec3(1.0f, 1.0f,
-                1.0f));  // it's a bit too big for our scene, so scale it down
-  shader_.SetMat4("model", model);
+  shader_.SetMat4("model", model_transform_.getMatrix());
   model_.Draw(shader_);
   framebuffer_.Unbind();
 }
 
 void ModelLayer::OnRender() {
-  ImGui::Begin("Image");
-
-  camera_.DrawController();
+  ImGui::Begin("viewport");
 
   ImVec2 viewport_panel_size = ImGui::GetContentRegionAvail();
   viewport_size_ = {viewport_panel_size.x, viewport_panel_size.y};
   // flip uv here
   ImGui::Image(framebuffer_.color_attachment, viewport_size_, {0, 1}, {1, 0});
 
+  ImGui::End();
+
+  ImGui::Begin("Camera Controller");
+  camera_.DrawController();
+  model_transform_.DrawMenu("Model Transform");
   ImGui::End();
 }
 

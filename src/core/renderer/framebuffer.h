@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "core/renderer/texture.h"
+#include "glad/gl.h"
 
 namespace prototype::renderer {
 
