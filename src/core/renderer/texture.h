@@ -34,7 +34,4 @@ struct Texture {
   void Bind() const;
 };
 
-Texture LoadTexture(const std::filesystem::path& path,
-                    bool flip_vertically = false);
-
 }  // namespace prototype::renderer

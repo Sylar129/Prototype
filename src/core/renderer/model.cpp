@@ -4,6 +4,7 @@
 
 #include "assimp/postprocess.h"
 #include "core/log.h"
+#include "core/renderer/image.h"
 
 namespace prototype::renderer {
 
@@ -162,7 +163,8 @@ std::vector<Texture> Model::LoadMaterialTextures(aiMaterial* mat,
       continue;
     }
 
-    Texture texture = LoadTexture(model_path_.replace_filename(str.C_Str()));
+    Texture texture;
+    texture.GenerateFromImage(Image(model_path_.replace_filename(str.C_Str())));
     textures.push_back(texture);
     textures_loaded_.push_back(
         str.C_Str());  // store it as texture loaded for entire model, to ensure
