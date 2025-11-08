@@ -15,16 +15,17 @@ namespace prototype::renderer {
 
 class Model {
  public:
-  // constructor, expects a filepath to a 3D model.
-  Model(const std::filesystem::path& path);
+  Model();
+
+  // loads a model with supported ASSIMP extensions from file and stores the
+  // resulting meshes in the meshes vector.
+  bool LoadModel(const std::filesystem::path& path);
+  void Process();
 
   // draws the model, and thus all its meshes
   void Draw(Shader& shader);
 
  private:
-  // loads a model with supported ASSIMP extensions from file and stores the
-  // resulting meshes in the meshes vector.
-  void LoadModel(const std::filesystem::path& path);
   // processes a node in a recursive fashion. Processes each individual mesh
   // located at the node and repeats this process on its children nodes (if
   // any).
@@ -37,6 +38,7 @@ class Model {
 
   // model data
   std::filesystem::path model_path_;
+  Assimp::Importer importer_;
   std::vector<std::string>
       textures_loaded_;  // stores all the textures loaded so far, optimization
                          // to make sure textures aren't loaded more than once.

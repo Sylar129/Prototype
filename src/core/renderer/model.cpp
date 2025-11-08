@@ -4,14 +4,10 @@
 
 #include "assimp/postprocess.h"
 #include "core/log.h"
-#include "stb/stb_image.h"
 
 namespace prototype::renderer {
 
-// constructor, expects a filepath to a 3D model.
-Model::Model(const std::filesystem::path& path) : model_path_(path) {
-  LoadModel(path);
-}
+Model::Model() {}
 
 // draws the model, and thus all its meshes
 void Model::Draw(Shader& shader) {
@@ -22,22 +18,28 @@ void Model::Draw(Shader& shader) {
 
 // loads a model with supported ASSIMP extensions from file and stores the
 // resulting meshes in the meshes vector.
-void Model::LoadModel(const std::filesystem::path& path) {
+bool Model::LoadModel(const std::filesystem::path& path) {
+  model_path_ = path;
   // read file via ASSIMP
-  Assimp::Importer importer;
-  const aiScene* scene = importer.ReadFile(
+  const aiScene* scene = importer_.ReadFile(
       path.string(), aiProcess_Triangulate | aiProcess_GenSmoothNormals |
                          aiProcess_CalcTangentSpace);
   // check for errors
   if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE ||
       !scene->mRootNode)  // if is Not Zero
   {
-    CORE_LOG_ERROR("ERROR::ASSIMP:: {}", importer.GetErrorString());
-    return;
+    CORE_LOG_ERROR("ERROR::ASSIMP:: {}", importer_.GetErrorString());
+    return false;
   }
 
+  return true;
+}
+
+void Model::Process() {
   // process ASSIMP's root node recursively
+  auto* scene = importer_.GetScene();
   ProcessNode(scene->mRootNode, scene);
+  importer_.FreeScene();
 }
 
 // processes a node in a recursive fashion. Processes each individual mesh

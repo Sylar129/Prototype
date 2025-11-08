@@ -11,9 +11,7 @@
 namespace prototype {
 
 ModelLayer::ModelLayer()
-    : model_("assets/models/backpack/backpack.obj"),
-      camera_(glm::vec3(0.0f, 0.0f, 20.0f)),
-      viewport_size_(1920, 1080) {}
+    : camera_(glm::vec3(0.0f, 0.0f, 20.0f)), viewport_size_(1920, 1080) {}
 
 ModelLayer::~ModelLayer() {}
 
@@ -21,6 +19,8 @@ void ModelLayer::OnAttach() {
   // Create shaders
   shader_.Compile("assets/shaders/model.vert", "assets/shaders/model.frag");
   framebuffer_ = renderer::CreateFrameBuffer();
+  model_.LoadModel("assets/models/backpack/backpack.obj");
+  model_.Process();
 }
 
 void ModelLayer::OnDetach() { shader_.Delete(); }
