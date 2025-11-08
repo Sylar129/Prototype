@@ -4,7 +4,6 @@
 
 #include "core/log.h"
 #include "glad/gl.h"
-#include "stb/stb_image.h"
 
 namespace prototype::renderer {
 
