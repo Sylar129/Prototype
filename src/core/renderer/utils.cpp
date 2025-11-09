@@ -5,7 +5,7 @@
 #include "core/log.h"
 #include "glad/gl.h"
 
-namespace prototype::renderer::utils {
+namespace prototype::utils {
 
 namespace {
 const char* GLDebugSourceToString(GLenum source) {
@@ -83,4 +83,4 @@ void InitOpenGLDebugMessageCallback() {
   glDebugMessageCallback(GLDebugCallback, nullptr);
 }
 
-}  // namespace prototype::renderer::utils
+}  // namespace prototype::utils

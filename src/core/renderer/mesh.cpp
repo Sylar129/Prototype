@@ -2,25 +2,33 @@
 
 #include "core/renderer/mesh.h"
 
-namespace prototype::renderer {
+#include "core/log.h"
+
+namespace prototype {
 
 Mesh::Mesh(const std::vector<Vertex>& vertices,
-           const std::vector<unsigned int>& indices,
-           const std::vector<Texture>& textures)
-    : vertices_(vertices), indices_(indices), diiffuse_maps_(textures) {
+           const std::vector<unsigned int>& indices)
+    : vertices_(vertices), indices_(indices) {
   SetupMesh();
+}
+
+void Mesh::SetDiffuseMaps(const std::vector<Texture>& diffuse) {
+  diffuse_maps_ = diffuse;
+}
+
+void Mesh::SetSpeculareMaps(const std::vector<Texture>& specular) {
+  specular_maps_ = specular;
 }
 
 void Mesh::Draw(Shader& shader) {
   int texture_num = 0;
 
   unsigned int diffuse_num = 1;
-  for (const auto& texture : diiffuse_maps_) {
+  for (const auto& texture : diffuse_maps_) {
     glActiveTexture(GL_TEXTURE0 + texture_num);
 
-    shader.SetInt(
-        ("material.texture_diffuse" + std::to_string(diffuse_num++)).c_str(),
-        texture_num);
+    std::string name = std::format("material{}.diffuse", diffuse_num++);
+    shader.SetInt(name, texture_num);
     glBindTexture(GL_TEXTURE_2D, texture.handle);
     texture_num++;
   }
@@ -29,9 +37,8 @@ void Mesh::Draw(Shader& shader) {
   for (const auto& texture : specular_maps_) {
     glActiveTexture(GL_TEXTURE0 + texture_num);
 
-    shader.SetInt(
-        ("material.texture_specular" + std::to_string(specular_num++)).c_str(),
-        texture_num);
+    std::string name = std::format("material{}.specular", specular_num++);
+    shader.SetInt(name, texture_num);
     glBindTexture(GL_TEXTURE_2D, texture.handle);
     texture_num++;
   }
@@ -72,4 +79,4 @@ void Mesh::SetupMesh() {
 
   glBindVertexArray(0);
 }
-}  // namespace prototype::renderer
+}  // namespace prototype

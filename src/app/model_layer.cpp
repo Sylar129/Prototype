@@ -3,6 +3,7 @@
 #include "model_layer.h"
 
 #include "core/components/transform.h"
+#include "core/renderer/light.h"
 #include "core/renderer/model.h"
 #include "core/renderer/shader.h"
 #include "glm/ext/matrix_clip_space.hpp"
@@ -11,14 +12,20 @@
 namespace prototype {
 
 ModelLayer::ModelLayer()
-    : camera_(glm::vec3(0.0f, 0.0f, 20.0f)), viewport_size_(1920, 1080) {}
+    : camera_(glm::vec3(0.0f, 0.0f, 20.0f)),
+      light_({1.2, 1.0, 2.0},  // postion
+             {0.2, 0.2, 0.2},  // ambient
+             {0.5, 0.5, 0.5},  // diffuse
+             {1.0, 1.0, 1.0}   // specular
+             ),
+      viewport_size_(1920, 1080) {}
 
 ModelLayer::~ModelLayer() {}
 
 void ModelLayer::OnAttach() {
   // Create shaders
   shader_.Compile("assets/shaders/model.vert", "assets/shaders/model.frag");
-  framebuffer_ = renderer::CreateFrameBuffer();
+  framebuffer_ = CreateFrameBuffer();
   model_.LoadModel("assets/models/backpack/backpack.obj");
   model_.Process();
 }
@@ -46,6 +53,9 @@ void ModelLayer::OnUpdate(float ts) {
                                      (float)1920 / (float)1080, 0.1f, 100.0f);
   shader_.SetMat4("projection", projection);
   shader_.SetMat4("view", camera_.GetViewMatrix());
+  shader_.SetVec3("view_pos", camera_.GetPosition());
+
+  shader_.SetPointLight("light", light_);
 
   // render the loaded model
   shader_.SetMat4("model", model_transform_.getMatrix());
@@ -65,6 +75,7 @@ void ModelLayer::OnRender() {
 
   ImGui::Begin("Camera Controller");
   camera_.DrawController();
+  light_.DrawContextMenu();
   model_transform_.DrawMenu("Model Transform");
   ImGui::End();
 }
@@ -78,25 +89,25 @@ bool ModelLayer::OnWindowResizeEvent(WindowResizeEvent& event) {
 bool ModelLayer::OnKeyPressedEvent(KeyPressdEvent& event) {
   switch (event.GetKeyCode()) {
     case KeyCode::kW:
-      camera_move_ = renderer::Camera::Movement::kForward;
+      camera_move_ = Camera::Movement::kForward;
       break;
     case KeyCode::kS:
-      camera_move_ = renderer::Camera::Movement::kBackward;
+      camera_move_ = Camera::Movement::kBackward;
       break;
     case KeyCode::kA:
-      camera_move_ = renderer::Camera::Movement::kLeft;
+      camera_move_ = Camera::Movement::kLeft;
       break;
     case KeyCode::kD:
-      camera_move_ = renderer::Camera::Movement::kRight;
+      camera_move_ = Camera::Movement::kRight;
       break;
     default:
-      camera_move_ = renderer::Camera::Movement::kStill;
+      camera_move_ = Camera::Movement::kStill;
   }
   return false;
 }
 
 bool ModelLayer::OnKeyReleasedEvent(KeyReleasedEvent& event) {
-  camera_move_ = renderer::Camera::Movement::kStill;
+  camera_move_ = Camera::Movement::kStill;
   return false;
 }
 

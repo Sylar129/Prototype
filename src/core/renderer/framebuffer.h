@@ -4,7 +4,7 @@
 
 #include "glad/gl.h"
 
-namespace prototype::renderer {
+namespace prototype {
 
 struct Framebuffer {
   GLuint handle = 0;
@@ -17,4 +17,4 @@ struct Framebuffer {
 
 Framebuffer CreateFrameBuffer();
 
-}  // namespace prototype::renderer
+}  // namespace prototype

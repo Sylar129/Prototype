@@ -10,7 +10,7 @@
 #include "imgui.h"
 #include "imgui_internal.h"
 
-namespace prototype::renderer {
+namespace prototype {
 Camera::Camera(const glm::vec3& pos) : pos_(pos) { UpdateCameraVectors(); }
 
 glm::vec3 Camera::GetPosition() const { return pos_; }
@@ -99,4 +99,4 @@ void Camera::UpdateCameraVectors() {
                            // which results in slower movement.
   up_ = glm::normalize(glm::cross(right_, front_));
 }
-}  // namespace prototype::renderer
+}  // namespace prototype

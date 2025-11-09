@@ -4,7 +4,7 @@
 
 #include <filesystem>
 
-namespace prototype::renderer {
+namespace prototype {
 
 class Image {
  public:
@@ -26,4 +26,4 @@ class Image {
   int channels_;
   unsigned char* data_;
 };
-}  // namespace prototype::renderer
+}  // namespace prototype

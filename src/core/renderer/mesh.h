@@ -8,7 +8,7 @@
 #include "core/renderer/texture.h"
 #include "glm/glm.hpp"
 
-namespace prototype::renderer {
+namespace prototype {
 
 #define MAX_BONE_INFLUENCE 4
 
@@ -32,19 +32,22 @@ struct Vertex {
 class Mesh {
  public:
   Mesh(const std::vector<Vertex>& vertices,
-       const std::vector<unsigned int>& indices,
-       const std::vector<Texture>& textures);
+       const std::vector<uint32_t>& indices);
+
+  void SetDiffuseMaps(const std::vector<Texture>& diffuse);
+  void SetSpeculareMaps(const std::vector<Texture>& specular);
+
   void Draw(Shader& shader);
 
  private:
   void SetupMesh();
   std::vector<Vertex> vertices_;
-  std::vector<unsigned int> indices_;
-  std::vector<Texture> diiffuse_maps_;
+  std::vector<uint32_t> indices_;
+  std::vector<Texture> diffuse_maps_;
   std::vector<Texture> specular_maps_;
-  std::vector<Texture> normal_maps_;
-  std::vector<Texture> height_maps_;
-  unsigned int vao_, vbo_, ebo_;
+  uint32_t vao_;
+  uint32_t vbo_;
+  uint32_t ebo_;
 };
 
-}  // namespace prototype::renderer
+}  // namespace prototype

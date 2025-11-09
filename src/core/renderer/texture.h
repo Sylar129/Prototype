@@ -6,7 +6,7 @@
 
 #include "glad/gl.h"
 
-namespace prototype::renderer {
+namespace prototype {
 
 class Image;
 
@@ -34,4 +34,4 @@ struct Texture {
   void Bind() const;
 };
 
-}  // namespace prototype::renderer
+}  // namespace prototype

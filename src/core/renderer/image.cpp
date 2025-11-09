@@ -5,7 +5,7 @@
 #include "core/log.h"
 #include "stb/stb_image.h"
 
-namespace prototype::renderer {
+namespace prototype {
 
 Image::Image(const std::filesystem::path& path, bool flip_vertically)
     : path_(path) {
@@ -30,4 +30,4 @@ bool Image::IsValid() const { return data_ != nullptr; }
 
 Image::~Image() { stbi_image_free(data_); }
 
-}  // namespace prototype::renderer
+}  // namespace prototype

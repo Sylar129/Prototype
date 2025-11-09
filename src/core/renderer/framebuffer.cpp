@@ -5,7 +5,7 @@
 #include "core/log.h"
 #include "glad/gl.h"
 
-namespace prototype::renderer {
+namespace prototype {
 
 void Framebuffer::Bind() {
   glBindFramebuffer(GL_FRAMEBUFFER, handle);
@@ -49,4 +49,4 @@ Framebuffer CreateFrameBuffer() {
   return framebuffer;
 }
 
-}  // namespace prototype::renderer
+}  // namespace prototype

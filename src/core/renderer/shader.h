@@ -7,7 +7,9 @@
 #include "glad/gl.h"
 #include "glm/glm.hpp"
 
-namespace prototype::renderer {
+namespace prototype {
+
+struct PointLight;
 
 class Shader {
  public:
@@ -27,8 +29,10 @@ class Shader {
   void SetVec4(const std::string& name, const glm::vec4& v);
   void SetMat4(const std::string& name, const glm::mat4& m);
 
+  void SetPointLight(const std::string& name, const PointLight& light);
+
  private:
   GLuint id_;
 };
 
-}  // namespace prototype::renderer
+}  // namespace prototype

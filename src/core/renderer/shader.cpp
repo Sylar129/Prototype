@@ -6,10 +6,11 @@
 #include <iostream>
 
 #include "core/log.h"
+#include "core/renderer/light.h"
 #include "glad/gl.h"
 #include "glm/gtc/type_ptr.hpp"
 
-namespace prototype::renderer {
+namespace prototype {
 
 namespace {
 std::string ReadTextFile(const std::filesystem::path& path) {
@@ -117,4 +118,15 @@ void Shader::SetMat4(const std::string& name, const glm::mat4& m) {
                      glm::value_ptr(m));
 }
 
-}  // namespace prototype::renderer
+void Shader::SetPointLight(const std::string& name, const PointLight& light) {
+  std::string position_name = name + ".position";
+  SetVec3(position_name, light.position);
+  std::string ambient_name = name + ".ambient";
+  SetVec3(ambient_name, light.ambient);
+  std::string diffuse_name = name + ".diffuse";
+  SetVec3(diffuse_name, light.diffuse);
+  std::string specular_name = name + ".specular";
+  SetVec3(specular_name, light.specular);
+}
+
+}  // namespace prototype

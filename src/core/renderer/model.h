@@ -11,7 +11,7 @@
 #include "core/renderer/shader.h"
 #include "core/renderer/texture.h"
 
-namespace prototype::renderer {
+namespace prototype {
 
 class Model {
  public:
@@ -45,4 +45,4 @@ class Model {
   std::vector<Mesh> meshes_;
 };
 
-}  // namespace prototype::renderer
+}  // namespace prototype
