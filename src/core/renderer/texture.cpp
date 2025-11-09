@@ -6,7 +6,7 @@
 #include "core/renderer/image.h"
 #include "glad/gl.h"
 
-namespace prototype::renderer {
+namespace prototype {
 
 namespace {
 constexpr GLenum GetFormat(int channels) {
@@ -92,4 +92,4 @@ void Texture::GenerateFromImage(const Image& image) {
 
 void Texture::Bind() const { glBindTexture(GL_TEXTURE_2D, handle); }
 
-}  // namespace prototype::renderer
+}  // namespace prototype

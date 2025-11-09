@@ -9,6 +9,7 @@
 #include "core/layer.h"
 #include "core/renderer/camera.h"
 #include "core/renderer/framebuffer.h"
+#include "core/renderer/light.h"
 #include "core/renderer/model.h"
 #include "core/renderer/shader.h"
 #include "imgui.h"
@@ -35,13 +36,14 @@ class ModelLayer : public core::Layer {
   bool OnMouseScrolledEvent(MouseScrolledEvent& event);
   bool OnMouseMovedEvent(MouseMovedEvent& event);
 
-  renderer::Shader shader_;
-  renderer::Model model_;
+  Shader shader_;
+  Model model_;
   TransformComponent model_transform_;
-  renderer::Camera camera_;
-  renderer::Camera::Movement camera_move_;
+  Camera camera_;
+  PointLight light_;
+  Camera::Movement camera_move_;
   bool camera_can_move_ = false;
-  renderer::Framebuffer framebuffer_;
+  Framebuffer framebuffer_;
   ImVec2 viewport_size_;
 
   int window_width_ = 0;

@@ -4,7 +4,7 @@
 
 #include "glm/glm.hpp"
 
-namespace prototype::renderer {
+namespace prototype {
 
 class Camera {
  public:
@@ -56,4 +56,4 @@ class Camera {
   float zoom_ = 45.0f;
 };
 
-}  // namespace prototype::renderer
+}  // namespace prototype

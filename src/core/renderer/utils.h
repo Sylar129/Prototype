@@ -2,8 +2,8 @@
 
 #pragma once
 
-namespace prototype::renderer::utils {
+namespace prototype::utils {
 
 void InitOpenGLDebugMessageCallback();
 
-}  // namespace prototype::renderer::utils
+}  // namespace prototype::utils

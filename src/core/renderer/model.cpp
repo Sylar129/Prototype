@@ -6,7 +6,7 @@
 #include "core/log.h"
 #include "core/renderer/image.h"
 
-namespace prototype::renderer {
+namespace prototype {
 
 Model::Model() {}
 
@@ -135,13 +135,12 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
   auto diffuse_maps = LoadMaterialTextures(material, aiTextureType_DIFFUSE);
   // 2. specular maps
   auto specular_maps = LoadMaterialTextures(material, aiTextureType_SPECULAR);
-  // 3. normal maps
-  auto normal_maps = LoadMaterialTextures(material, aiTextureType_NORMALS);
-  // 4. height maps
-  auto height_maps = LoadMaterialTextures(material, aiTextureType_HEIGHT);
 
   // return a mesh object created from the extracted mesh data
-  return Mesh(vertices, indices, diffuse_maps);
+  Mesh m(vertices, indices);
+  m.SetDiffuseMaps(diffuse_maps);
+  m.SetSpeculareMaps(specular_maps);
+  return m;
 }
 
 // checks all material textures of a given type and loads the textures if
@@ -172,4 +171,4 @@ std::vector<Texture> Model::LoadMaterialTextures(aiMaterial* mat,
   }
   return textures;
 }
-}  // namespace prototype::renderer
+}  // namespace prototype

@@ -19,6 +19,8 @@ set(CORE_SOURCES
     core/renderer/framebuffer.h
     core/renderer/image.cpp
     core/renderer/image.h
+    core/renderer/light.cpp
+    core/renderer/light.h
     core/renderer/mesh.cpp
     core/renderer/mesh.h
     core/renderer/model.cpp

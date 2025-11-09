@@ -44,7 +44,7 @@ void Application::Init() {
   imgui_layer_ = std::make_unique<ImguiLayer>();
   imgui_layer_->Init(window_->GetHandle());
 
-  renderer::utils::InitOpenGLDebugMessageCallback();
+  utils::InitOpenGLDebugMessageCallback();
 }
 
 void Application::Run() {
