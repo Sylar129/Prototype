@@ -6,6 +6,7 @@
 #include <iostream>
 
 #include "core/log.h"
+#include "core/renderer/camera.h"
 #include "core/renderer/light.h"
 #include "glad/gl.h"
 #include "glm/gtc/type_ptr.hpp"
@@ -116,6 +117,14 @@ void Shader::SetVec4(const std::string& name, const glm::vec4& v) {
 void Shader::SetMat4(const std::string& name, const glm::mat4& m) {
   glUniformMatrix4fv(glGetUniformLocation(id_, name.c_str()), 1, GL_FALSE,
                      glm::value_ptr(m));
+}
+
+void Shader::SetCamara(const std::string& name, const Camera& camera) {
+  auto projection = glm::perspective(glm::radians(camera.GetZoom()),
+                                     (float)1920 / (float)1080, 0.1f, 100.0f);
+  SetMat4("projection", projection);
+  SetMat4("view", camera.GetViewMatrix());
+  SetVec3("view_pos", camera.GetPosition());
 }
 
 void Shader::SetPointLight(const std::string& name, const PointLight& light) {

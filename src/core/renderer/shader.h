@@ -9,6 +9,7 @@
 
 namespace prototype {
 
+class Camera;
 struct PointLight;
 
 class Shader {
@@ -29,6 +30,7 @@ class Shader {
   void SetVec4(const std::string& name, const glm::vec4& v);
   void SetMat4(const std::string& name, const glm::mat4& m);
 
+  void SetCamara(const std::string& name, const Camera& camera);
   void SetPointLight(const std::string& name, const PointLight& light);
 
  private:

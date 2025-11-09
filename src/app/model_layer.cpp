@@ -49,12 +49,7 @@ void ModelLayer::OnUpdate(float ts) {
   framebuffer_.Bind();
   shader_.Use();
 
-  auto projection = glm::perspective(glm::radians(camera_.GetZoom()),
-                                     (float)1920 / (float)1080, 0.1f, 100.0f);
-  shader_.SetMat4("projection", projection);
-  shader_.SetMat4("view", camera_.GetViewMatrix());
-  shader_.SetVec3("view_pos", camera_.GetPosition());
-
+  shader_.SetCamara("", camera_);
   shader_.SetPointLight("light", light_);
 
   // render the loaded model
@@ -74,7 +69,7 @@ void ModelLayer::OnRender() {
   ImGui::End();
 
   ImGui::Begin("Camera Controller");
-  camera_.DrawController();
+  camera_.DrawContextMenu();
   light_.DrawContextMenu();
   model_transform_.DrawMenu("Model Transform");
   ImGui::End();

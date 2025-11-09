@@ -11,6 +11,7 @@
 #include "imgui_internal.h"
 
 namespace prototype {
+
 Camera::Camera(const glm::vec3& pos) : pos_(pos) { UpdateCameraVectors(); }
 
 glm::vec3 Camera::GetPosition() const { return pos_; }
@@ -21,7 +22,7 @@ glm::mat4 Camera::GetViewMatrix() const {
 
 float Camera::GetZoom() const { return zoom_; }
 
-void Camera::DrawController() {
+void Camera::DrawContextMenu() {
   constexpr ImGuiTreeNodeFlags kTreeNodeFlags =
       ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowOverlap |
       ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth |
