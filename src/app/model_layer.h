@@ -36,11 +36,14 @@ class ModelLayer : public core::Layer {
   bool OnMouseScrolledEvent(MouseScrolledEvent& event);
   bool OnMouseMovedEvent(MouseMovedEvent& event);
 
-  Shader shader_;
+  Shader model_shader_;
+  Shader light_shader_;
   Model model_;
   TransformComponent model_transform_;
   Camera camera_;
   PointLight light_;
+  SmoothOrbitLight orbit_light_;
+  LightCube light_cube_;
   Camera::Movement camera_move_;
   bool camera_can_move_ = false;
   Framebuffer framebuffer_;
