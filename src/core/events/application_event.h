@@ -11,11 +11,10 @@ namespace prototype {
 
 class WindowResizeEvent : public Event {
  public:
-  WindowResizeEvent(unsigned int width, unsigned int height)
-      : width_(width), height_(height) {}
+  WindowResizeEvent(int width, int height) : width_(width), height_(height) {}
 
-  inline unsigned int GetWidth() const { return width_; }
-  inline unsigned int GetHeight() const { return height_; }
+  int GetWidth() const { return width_; }
+  int GetHeight() const { return height_; }
 
   std::string ToString() const override {
     std::stringstream ss;
@@ -26,8 +25,8 @@ class WindowResizeEvent : public Event {
   EVENT_CLASS_CATEGORY(kEventCategoryApplication);
 
  private:
-  unsigned int width_;
-  unsigned int height_;
+  int width_;
+  int height_;
 };
 
 class WindowCloseEvent : public Event {

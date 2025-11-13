@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include <memory>
+
 #include "core/components/locomotion.h"
 #include "core/components/transform.h"
 #include "core/events/application_event.h"
@@ -30,7 +32,6 @@ class ModelLayer : public core::Layer {
   virtual void OnRender() override;
 
  private:
-  bool OnWindowResizeEvent(WindowResizeEvent& event);
   bool OnKeyPressedEvent(KeyPressdEvent& event);
   bool OnKeyReleasedEvent(KeyReleasedEvent& event);
   bool OnMouseButtonPressedEvent(MouseButtonPressedEvent& event);
@@ -48,11 +49,7 @@ class ModelLayer : public core::Layer {
   Cube light_cube_;
   Camera::Movement camera_move_;
   bool camera_can_move_ = false;
-  Framebuffer framebuffer_;
-  ImVec2 viewport_size_;
-
-  int window_width_ = 0;
-  int window_height_ = 0;
+  std::unique_ptr<Framebuffer> framebuffer_;
 };
 
 }  // namespace prototype

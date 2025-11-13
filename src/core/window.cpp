@@ -56,8 +56,19 @@ void Window::SetEventCallback(const EventCallbackFn& callback) {
   data_.event_callback = callback;
 }
 
+glm::vec2 Window::GetWindowSize() const { return {data_.width, data_.height}; }
+
 glm::vec2 Window::GetFramebufferSize() const {
-  return {data_.width, data_.height};
+  int w;
+  int h;
+  glfwGetFramebufferSize(handle_, &w, &h);
+  return {w, h};
+}
+
+glm::vec2 Window::GetContentScale() const {
+  glm::vec2 scale;
+  glfwGetWindowContentScale(handle_, &scale.x, &scale.y);
+  return scale;
 }
 
 bool Window::ShouldClose() const { return glfwWindowShouldClose(handle_) != 0; }

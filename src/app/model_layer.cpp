@@ -2,7 +2,10 @@
 
 #include "model_layer.h"
 
+#include <memory>
+
 #include "core/components/transform.h"
+#include "core/renderer/framebuffer.h"
 #include "core/renderer/light.h"
 #include "core/renderer/model.h"
 #include "core/renderer/shader.h"
@@ -19,8 +22,7 @@ ModelLayer::ModelLayer()
              {0.5, 0.5, 0.5},  // diffuse
              {1.0, 1.0, 1.0}   // specular
              ),
-      orbit_light_(5, {0.0, 0.0, 0.0}, 1, 0.5, 0, 0),
-      viewport_size_(1920, 1080) {}
+      orbit_light_(5, {0.0, 0.0, 0.0}, 1, 0.5, 0, 0) {}
 
 ModelLayer::~ModelLayer() {}
 
@@ -30,7 +32,7 @@ void ModelLayer::OnAttach() {
                         "assets/shaders/model.frag");
   light_shader_.Compile("assets/shaders/light.vert",
                         "assets/shaders/light.frag");
-  framebuffer_ = CreateFrameBuffer();
+  framebuffer_ = std::make_unique<Framebuffer>(1920, 1080);
   model_.LoadModel("assets/models/backpack/backpack.obj");
   model_.Process();
 }
@@ -42,7 +44,6 @@ void ModelLayer::OnDetach() {
 
 void ModelLayer::OnEvent(Event& event) {
   EventDispatcher dispatcher(event);
-  dispatcher.Dispatch(this, &ModelLayer::OnWindowResizeEvent);
   dispatcher.Dispatch(this, &ModelLayer::OnKeyPressedEvent);
   dispatcher.Dispatch(this, &ModelLayer::OnKeyReleasedEvent);
   dispatcher.Dispatch(this, &ModelLayer::OnMouseButtonPressedEvent);
@@ -54,7 +55,7 @@ void ModelLayer::OnEvent(Event& event) {
 void ModelLayer::OnUpdate(float ts) {
   camera_.ProcessKeyboard(camera_move_, ts);
 
-  framebuffer_.Bind();
+  framebuffer_->BeginRecording();
   model_shader_.Use();
 
   light_.position = orbit_light_.UpdatePosition(ts);
@@ -78,16 +79,16 @@ void ModelLayer::OnUpdate(float ts) {
   light_shader_.SetMat4("model", model);
   light_cube_.Draw(light_shader_);
 
-  framebuffer_.Unbind();
+  framebuffer_->EndRecording();
 }
 
 void ModelLayer::OnRender() {
   ImGui::Begin("viewport");
 
   ImVec2 viewport_panel_size = ImGui::GetContentRegionAvail();
-  viewport_size_ = {viewport_panel_size.x, viewport_panel_size.y};
   // flip uv here
-  ImGui::Image(framebuffer_.color_attachment, viewport_size_, {0, 1}, {1, 0});
+  ImGui::Image(framebuffer_->color_attachment, viewport_panel_size, {0, 1},
+               {1, 0});
 
   ImGui::End();
 
@@ -97,12 +98,6 @@ void ModelLayer::OnRender() {
   orbit_light_.DrawMenu();
   model_transform_.DrawMenu("Model Transform");
   ImGui::End();
-}
-
-bool ModelLayer::OnWindowResizeEvent(WindowResizeEvent& event) {
-  window_width_ = event.GetWidth();
-  window_height_ = event.GetHeight();
-  return false;
 }
 
 bool ModelLayer::OnKeyPressedEvent(KeyPressdEvent& event) {

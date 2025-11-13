@@ -8,13 +8,15 @@ namespace prototype {
 
 struct Framebuffer {
   GLuint handle = 0;
+  int width;
+  int height;
   GLuint color_attachment = 0;
   GLuint render_buffer = 0;
 
-  void Bind();
-  void Unbind();
-};
+  Framebuffer(int w, int h);
 
-Framebuffer CreateFrameBuffer();
+  void BeginRecording();
+  void EndRecording();
+};
 
 }  // namespace prototype

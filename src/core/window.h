@@ -30,7 +30,11 @@ class Window {
 
   void SetEventCallback(const EventCallbackFn& callback);
 
+  glm::vec2 GetWindowSize() const;
+  // in MacOS, FramebufferSize != WindowSize
   glm::vec2 GetFramebufferSize() const;
+  // FramebufferSize = WindowSize * ContentScale
+  glm::vec2 GetContentScale() const;
 
   bool ShouldClose() const;
 
