@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "core/components/locomotion.h"
 #include "core/components/transform.h"
 #include "core/events/application_event.h"
 #include "core/events/key_event.h"
@@ -42,7 +43,7 @@ class ModelLayer : public core::Layer {
   TransformComponent model_transform_;
   Camera camera_;
   PointLight light_;
-  SmoothOrbitLight orbit_light_;
+  SpiralMotion orbit_light_;
   LightCube light_cube_;
   Camera::Movement camera_move_;
   bool camera_can_move_ = false;

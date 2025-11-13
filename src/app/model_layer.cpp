@@ -12,6 +12,13 @@
 
 namespace prototype {
 
+const double RADIUS = 5.0;
+const glm::vec3 CENTER_POS = {0.0, 0.0, 0.0};
+const double OMEGA_THETA = 1.0;  // 水平角速度: 1.0 rad/s
+const double OMEGA_PHI = 0.1;    // 垂直角速度: 0.1 rad/s (螺旋上升)
+const double THETA_INITIAL = 0.0;
+const double PHI_INITIAL = M_PI / 2.0;  // 赤道位置
+
 ModelLayer::ModelLayer()
     : camera_(glm::vec3(0.0f, 0.0f, 20.0f)),
       light_({1.2, 1.0, 2.0},  // postion
@@ -19,12 +26,8 @@ ModelLayer::ModelLayer()
              {0.5, 0.5, 0.5},  // diffuse
              {1.0, 1.0, 1.0}   // specular
              ),
-      orbit_light_({0.0, 1.0, 0.0},  // center above ground
-                   6.0,              // base radius
-                   2.0,              // radius jitter
-                   0.7,              // angular speed
-                   0.9,              // noise speed
-                   12345),
+      orbit_light_(RADIUS, CENTER_POS, OMEGA_THETA, OMEGA_PHI, THETA_INITIAL,
+                   PHI_INITIAL),
       viewport_size_(1920, 1080) {}
 
 ModelLayer::~ModelLayer() {}
@@ -62,7 +65,8 @@ void ModelLayer::OnUpdate(float ts) {
   framebuffer_.Bind();
   model_shader_.Use();
 
-  light_.position = orbit_light_.update(ts);
+  orbit_light_.updatePosition(ts);
+  light_.position = orbit_light_.position;
 
   model_shader_.SetCamara("", camera_);
   model_shader_.SetPointLight("light", light_);
