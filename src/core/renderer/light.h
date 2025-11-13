@@ -6,8 +6,6 @@
 
 namespace prototype {
 
-class Shader;
-
 struct PointLight {
   glm::vec3 position;
 
@@ -16,18 +14,6 @@ struct PointLight {
   glm::vec3 specular;
 
   void DrawContextMenu();
-};
-
-class LightCube {
- public:
-  LightCube();
-
-  void Draw(Shader& shader);
-
- private:
-  uint32_t vao_;
-  uint32_t vbo_;
-  uint32_t ebo_;
 };
 
 }  // namespace prototype

@@ -13,6 +13,7 @@
 #include "core/renderer/light.h"
 #include "core/renderer/model.h"
 #include "core/renderer/shader.h"
+#include "core/renderer/shape.h"
 #include "imgui.h"
 
 namespace prototype {
