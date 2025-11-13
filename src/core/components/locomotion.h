@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include <string>
+
 #include "glm/glm.hpp"
 
 namespace prototype {
@@ -18,6 +20,8 @@ class SpiralMotion {
         current_phi_(phi_initial) {}
 
   glm::vec3 UpdatePosition(float dt);
+
+  void DrawMenu(const std::string& label = "SpiralMotion");
 
  private:
   glm::vec3 CalculatePositionFromAngles() const;

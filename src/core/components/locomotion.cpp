@@ -2,14 +2,63 @@
 
 #include "core/components/locomotion.h"
 
+#include <algorithm>
+#include <numbers>
+#include <typeinfo>
+
+#include "glm/gtc/type_ptr.hpp"
+#include "imgui.h"
+#include "imgui_internal.h"
+
 namespace prototype {
 
+namespace {
+template <typename T>
+T Wrap(T value, T min, T max) {
+  T range = max - min;
+  value = std::fmod(value - min, range);
+  if (value < 0) {
+    value += range;
+  }
+  return value + min;
+}
+}  // namespace
+
 glm::vec3 SpiralMotion::UpdatePosition(float dt) {
-  current_theta_ += omega_theta_ * dt;
-  current_phi_ += omega_phi_ * dt;
-  current_theta_ = std::fmod(current_theta_, 2.0 * M_PI);
+  current_theta_ = Wrap<float>(current_theta_ + omega_theta_ * dt, 0,
+                               2.0 * std::numbers::pi);
+  current_phi_ = Wrap<float>(current_phi_ + omega_phi_ * dt, -std::numbers::pi,
+                             std::numbers::pi);
 
   return CalculatePositionFromAngles();
+}
+
+void SpiralMotion::DrawMenu(const std::string& label) {
+  constexpr ImGuiTreeNodeFlags kTreeNodeFlags =
+      ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowOverlap |
+      ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth |
+      ImGuiTreeNodeFlags_FramePadding;
+
+  ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{4, 4});
+  float line_height =
+      GImGui->Font->LegacySize + GImGui->Style.FramePadding.y * 2.0f;
+  ImGui::Separator();
+  // NOLINTNEXTLINE
+  bool open = ImGui::TreeNodeEx((void*)typeid(SpiralMotion).hash_code(),
+                                kTreeNodeFlags, "%s", label.c_str());
+  ImGui::PopStyleVar();
+
+  if (open) {
+    ImGui::SliderFloat3("Center", glm::value_ptr(center_), -100, 100);
+    ImGui::SliderFloat("Radius", &radius_, 1, 100);
+    ImGui::SliderAngle("Omega theta", &omega_theta_);
+    ImGui::SliderAngle("Omega phi", &omega_phi_);
+
+    ImGui::SliderAngle("Current theta", &current_theta_, 0);
+    ImGui::SliderAngle("Current phi", &current_phi_, -180, 180);
+
+    ImGui::TreePop();
+  }
 }
 
 glm::vec3 SpiralMotion::CalculatePositionFromAngles() const {

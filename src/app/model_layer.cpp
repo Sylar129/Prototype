@@ -12,13 +12,6 @@
 
 namespace prototype {
 
-const double RADIUS = 5.0;
-const glm::vec3 CENTER_POS = {0.0, 0.0, 0.0};
-const double OMEGA_THETA = 1.0;  // 水平角速度: 1.0 rad/s
-const double OMEGA_PHI = 0.1;    // 垂直角速度: 0.1 rad/s (螺旋上升)
-const double THETA_INITIAL = 0.0;
-const double PHI_INITIAL = M_PI / 2.0;  // 赤道位置
-
 ModelLayer::ModelLayer()
     : camera_(glm::vec3(0.0f, 0.0f, 20.0f)),
       light_({1.2, 1.0, 2.0},  // postion
@@ -26,8 +19,7 @@ ModelLayer::ModelLayer()
              {0.5, 0.5, 0.5},  // diffuse
              {1.0, 1.0, 1.0}   // specular
              ),
-      orbit_light_(RADIUS, CENTER_POS, OMEGA_THETA, OMEGA_PHI, THETA_INITIAL,
-                   PHI_INITIAL),
+      orbit_light_(5, {0.0, 0.0, 0.0}, 1, 0.5, 0, 0),
       viewport_size_(1920, 1080) {}
 
 ModelLayer::~ModelLayer() {}
@@ -102,6 +94,7 @@ void ModelLayer::OnRender() {
   ImGui::Begin("Camera Controller");
   camera_.DrawContextMenu();
   light_.DrawContextMenu();
+  orbit_light_.DrawMenu();
   model_transform_.DrawMenu("Model Transform");
   ImGui::End();
 }
