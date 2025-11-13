@@ -8,9 +8,9 @@ namespace prototype {
 
 class Shader;
 
-class LightCube {
+class Cube {
  public:
-  LightCube();
+  Cube();
 
   void Draw(Shader& shader);
 

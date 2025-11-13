@@ -45,7 +45,7 @@ class ModelLayer : public core::Layer {
   Camera camera_;
   PointLight light_;
   SpiralMotion orbit_light_;
-  LightCube light_cube_;
+  Cube light_cube_;
   Camera::Movement camera_move_;
   bool camera_can_move_ = false;
   Framebuffer framebuffer_;

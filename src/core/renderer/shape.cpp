@@ -53,7 +53,7 @@ float vertices[] = {
 // clang-format on
 }  // namespace
 
-LightCube::LightCube() {
+Cube::Cube() {
   glGenVertexArrays(1, &vao_);
   glGenBuffers(1, &vbo_);
   glGenBuffers(1, &ebo_);
@@ -74,7 +74,7 @@ LightCube::LightCube() {
   glBindVertexArray(0);
 }
 
-void LightCube::Draw(Shader& shader) {
+void Cube::Draw(Shader& shader) {
   glBindVertexArray(vao_);
   glDrawArrays(GL_TRIANGLES, 0, sizeof(vertices) / sizeof(vertices[0]));
 }
