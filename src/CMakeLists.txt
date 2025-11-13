@@ -3,6 +3,8 @@
 #
 
 set(CORE_SOURCES
+    core/components/locomotion.cpp
+    core/components/locomotion.h
     core/components/transform.cpp
     core/components/transform.h
 

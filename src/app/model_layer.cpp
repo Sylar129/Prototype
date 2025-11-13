@@ -65,8 +65,7 @@ void ModelLayer::OnUpdate(float ts) {
   framebuffer_.Bind();
   model_shader_.Use();
 
-  orbit_light_.updatePosition(ts);
-  light_.position = orbit_light_.position;
+  light_.position = orbit_light_.UpdatePosition(ts);
 
   model_shader_.SetCamara("", camera_);
   model_shader_.SetPointLight("light", light_);
