@@ -27,7 +27,9 @@ void PointLight::DrawContextMenu() {
 
   if (open) {
     ImGui::Text("This is Light Controller");
+    ImGui::BeginDisabled(true);
     ImGui::SliderFloat3("position", glm::value_ptr(position), -100, 100);
+    ImGui::EndDisabled();
     ImGui::SliderFloat3("ambient", glm::value_ptr(ambient), 0, 1);
     ImGui::SliderFloat3("diffuse", glm::value_ptr(diffuse), 0, 1);
     ImGui::SliderFloat3("specular", glm::value_ptr(specular), 0, 1);

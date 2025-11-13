@@ -3,6 +3,8 @@
 #
 
 set(CORE_SOURCES
+    core/components/locomotion.cpp
+    core/components/locomotion.h
     core/components/transform.cpp
     core/components/transform.h
 
@@ -27,6 +29,8 @@ set(CORE_SOURCES
     core/renderer/model.h
     core/renderer/shader.cpp
     core/renderer/shader.h
+    core/renderer/shape.cpp
+    core/renderer/shape.h
     core/renderer/texture.cpp
     core/renderer/texture.h
     core/renderer/utils.cpp

@@ -7,6 +7,7 @@
 #include "core/renderer/model.h"
 #include "core/renderer/shader.h"
 #include "glm/ext/matrix_clip_space.hpp"
+#include "glm/ext/matrix_transform.hpp"
 #include "imgui.h"
 
 namespace prototype {
@@ -18,19 +19,26 @@ ModelLayer::ModelLayer()
              {0.5, 0.5, 0.5},  // diffuse
              {1.0, 1.0, 1.0}   // specular
              ),
+      orbit_light_(5, {0.0, 0.0, 0.0}, 1, 0.5, 0, 0),
       viewport_size_(1920, 1080) {}
 
 ModelLayer::~ModelLayer() {}
 
 void ModelLayer::OnAttach() {
   // Create shaders
-  shader_.Compile("assets/shaders/model.vert", "assets/shaders/model.frag");
+  model_shader_.Compile("assets/shaders/model.vert",
+                        "assets/shaders/model.frag");
+  light_shader_.Compile("assets/shaders/light.vert",
+                        "assets/shaders/light.frag");
   framebuffer_ = CreateFrameBuffer();
   model_.LoadModel("assets/models/backpack/backpack.obj");
   model_.Process();
 }
 
-void ModelLayer::OnDetach() { shader_.Delete(); }
+void ModelLayer::OnDetach() {
+  model_shader_.Delete();
+  light_shader_.Delete();
+}
 
 void ModelLayer::OnEvent(Event& event) {
   EventDispatcher dispatcher(event);
@@ -47,14 +55,29 @@ void ModelLayer::OnUpdate(float ts) {
   camera_.ProcessKeyboard(camera_move_, ts);
 
   framebuffer_.Bind();
-  shader_.Use();
+  model_shader_.Use();
 
-  shader_.SetCamara("", camera_);
-  shader_.SetPointLight("light", light_);
+  light_.position = orbit_light_.UpdatePosition(ts);
+
+  model_shader_.SetCamara("", camera_);
+  model_shader_.SetPointLight("light", light_);
 
   // render the loaded model
-  shader_.SetMat4("model", model_transform_.getMatrix());
-  model_.Draw(shader_);
+  model_shader_.SetMat4("model", model_transform_.getMatrix());
+  model_.Draw(model_shader_);
+
+  light_shader_.Use();
+  auto projection = glm::perspective(glm::radians(camera_.GetZoom()),
+                                     (float)1920 / (float)1080, 0.1f, 100.0f);
+  light_shader_.SetMat4("projection", projection);
+  light_shader_.SetMat4("view", camera_.GetViewMatrix());
+  glm::mat4 model = glm::mat4(1.0f);
+  model = glm::mat4(1.0f);
+  model = glm::translate(model, light_.position);
+  model = glm::scale(model, glm::vec3(0.2f));  // a smaller cube
+  light_shader_.SetMat4("model", model);
+  light_cube_.Draw(light_shader_);
+
   framebuffer_.Unbind();
 }
 
@@ -71,6 +94,7 @@ void ModelLayer::OnRender() {
   ImGui::Begin("Camera Controller");
   camera_.DrawContextMenu();
   light_.DrawContextMenu();
+  orbit_light_.DrawMenu();
   model_transform_.DrawMenu("Model Transform");
   ImGui::End();
 }

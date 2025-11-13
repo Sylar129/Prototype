@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "core/components/locomotion.h"
 #include "core/components/transform.h"
 #include "core/events/application_event.h"
 #include "core/events/key_event.h"
@@ -12,6 +13,7 @@
 #include "core/renderer/light.h"
 #include "core/renderer/model.h"
 #include "core/renderer/shader.h"
+#include "core/renderer/shape.h"
 #include "imgui.h"
 
 namespace prototype {
@@ -36,11 +38,14 @@ class ModelLayer : public core::Layer {
   bool OnMouseScrolledEvent(MouseScrolledEvent& event);
   bool OnMouseMovedEvent(MouseMovedEvent& event);
 
-  Shader shader_;
+  Shader model_shader_;
+  Shader light_shader_;
   Model model_;
   TransformComponent model_transform_;
   Camera camera_;
   PointLight light_;
+  SpiralMotion orbit_light_;
+  Cube light_cube_;
   Camera::Movement camera_move_;
   bool camera_can_move_ = false;
   Framebuffer framebuffer_;
