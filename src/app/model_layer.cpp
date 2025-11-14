@@ -9,6 +9,7 @@
 #include "core/renderer/light.h"
 #include "core/renderer/model.h"
 #include "core/renderer/shader.h"
+#include "core/window.h"
 #include "glm/ext/matrix_clip_space.hpp"
 #include "glm/ext/matrix_transform.hpp"
 #include "imgui.h"
@@ -26,13 +27,14 @@ ModelLayer::ModelLayer()
 
 ModelLayer::~ModelLayer() {}
 
-void ModelLayer::OnAttach() {
+void ModelLayer::OnAttach(const Window& window) {
   // Create shaders
   ShaderLibrary::GetInstance().Load("model", "assets/shaders/model.vert",
                                     "assets/shaders/model.frag");
   ShaderLibrary::GetInstance().Load("light", "assets/shaders/light.vert",
                                     "assets/shaders/light.frag");
-  framebuffer_ = std::make_unique<Framebuffer>(1920 * 2, 1080 * 2);
+  framebuffer_ = std::make_unique<Framebuffer>(window.GetFramebufferSize().x,
+                                               window.GetFramebufferSize().y);
   model_.LoadModel("assets/models/backpack/backpack.obj");
   model_.Process();
 }
@@ -61,8 +63,6 @@ void ModelLayer::OnRender() {
   auto& model_shader = *ShaderLibrary::GetInstance().Get("model");
   model_shader.Use();
 
-  light_.position = orbit_light_.UpdatePosition(0);
-
   model_shader.SetCamara("", camera_);
   model_shader.SetPointLight("light", light_);
 
@@ -84,9 +84,10 @@ void ModelLayer::OnRender() {
   light_cube_.Draw(light_shader);
 
   // framebuffer_->EndRecording();
-  ImGui::Begin("Camera Controller");
+  ImGui::Begin("Controller");
   camera_.DrawContextMenu();
   light_.DrawContextMenu();
+  light_.position = orbit_light_.UpdatePosition(0);
   orbit_light_.DrawMenu();
   model_transform_.DrawMenu("Model Transform");
   ImGui::End();

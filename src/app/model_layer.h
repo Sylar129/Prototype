@@ -18,12 +18,12 @@
 
 namespace prototype {
 
-class ModelLayer : public core::Layer {
+class ModelLayer : public Layer {
  public:
   ModelLayer();
   virtual ~ModelLayer();
 
-  virtual void OnAttach() override;
+  virtual void OnAttach(const Window& window) override;
   virtual void OnDetach() override;
   virtual void OnEvent(Event& event) override;
   virtual void OnUpdate(float ts) override;

@@ -12,7 +12,7 @@
 #include "core/log.h"
 #include "core/renderer/utils.h"
 
-namespace prototype::core {
+namespace prototype {
 
 static Application* kApplication = nullptr;
 
@@ -112,7 +112,7 @@ void Application::OnEvent(Event& event) {
 
 void Application::PushLayer(std::shared_ptr<Layer> layer) {
   layer_stack_.push_back(layer);
-  layer->OnAttach();
+  layer->OnAttach(*window_);
 }
 
 Application& Application::Get() {
@@ -122,4 +122,4 @@ Application& Application::Get() {
 
 float Application::GetTime() { return (float)glfwGetTime(); }
 
-}  // namespace prototype::core
+}  // namespace prototype

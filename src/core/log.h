@@ -6,7 +6,7 @@
 
 #include "spdlog/logger.h"
 
-namespace prototype::core {
+namespace prototype {
 
 class Log {
  public:
@@ -23,16 +23,16 @@ class Log {
   static std::shared_ptr<spdlog::logger> kAppLogger;
 };
 
-}  // namespace breakout
+}  // namespace prototype
 
-#define CORE_LOG_TRACE(...) ::prototype::core::Log::GetCoreLogger()->trace(__VA_ARGS__)
-#define CORE_LOG_INFO(...) ::prototype::core::Log::GetCoreLogger()->info(__VA_ARGS__)
-#define CORE_LOG_WARN(...) ::prototype::core::Log::GetCoreLogger()->warn(__VA_ARGS__)
-#define CORE_LOG_ERROR(...) ::prototype::core::Log::GetCoreLogger()->error(__VA_ARGS__)
-#define CORE_LOG_CRITICAL(...) ::prototype::core::Log::GetCoreLogger()->critical(__VA_ARGS__)
+#define CORE_LOG_TRACE(...) ::prototype::Log::GetCoreLogger()->trace(__VA_ARGS__)
+#define CORE_LOG_INFO(...) ::prototype::Log::GetCoreLogger()->info(__VA_ARGS__)
+#define CORE_LOG_WARN(...) ::prototype::Log::GetCoreLogger()->warn(__VA_ARGS__)
+#define CORE_LOG_ERROR(...) ::prototype::Log::GetCoreLogger()->error(__VA_ARGS__)
+#define CORE_LOG_CRITICAL(...) ::prototype::Log::GetCoreLogger()->critical(__VA_ARGS__)
 
-#define APP_LOG_TRACE(...) ::prototype::core::Log::GetAppLogger()->trace(__VA_ARGS__)
-#define APP_LOG_INFO(...) ::prototype::core::Log::GetAppLogger()->info(__VA_ARGS__)
-#define APP_LOG_WARN(...) ::prototype::core::Log::GetAppLogger()->warn(__VA_ARGS__)
-#define APP_LOG_ERROR(...) ::prototype::core::Log::GetAppLogger()->error(__VA_ARGS__)
-#define APP_LOG_CRITICAL(...) ::prototype::core::Log::GetAppLogger()->critical(__VA_ARGS__)
+#define APP_LOG_TRACE(...) ::prototype::Log::GetAppLogger()->trace(__VA_ARGS__)
+#define APP_LOG_INFO(...) ::prototype::Log::GetAppLogger()->info(__VA_ARGS__)
+#define APP_LOG_WARN(...) ::prototype::Log::GetAppLogger()->warn(__VA_ARGS__)
+#define APP_LOG_ERROR(...) ::prototype::Log::GetAppLogger()->error(__VA_ARGS__)
+#define APP_LOG_CRITICAL(...) ::prototype::Log::GetAppLogger()->critical(__VA_ARGS__)

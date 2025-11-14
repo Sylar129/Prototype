@@ -12,7 +12,7 @@
 #include "core/log.h"
 #include "glad/gl.h"
 
-namespace prototype::core {
+namespace prototype {
 
 Window::Window(const WindowSpecification& specification)
     : data_(specification.title, specification.width, specification.height) {}
@@ -56,9 +56,9 @@ void Window::SetEventCallback(const EventCallbackFn& callback) {
   data_.event_callback = callback;
 }
 
-glm::vec2 Window::GetWindowSize() const { return {data_.width, data_.height}; }
+glm::ivec2 Window::GetWindowSize() const { return {data_.width, data_.height}; }
 
-glm::vec2 Window::GetFramebufferSize() const {
+glm::ivec2 Window::GetFramebufferSize() const {
   int w;
   int h;
   glfwGetFramebufferSize(handle_, &w, &h);
@@ -171,4 +171,4 @@ void Window::SetCallback() {
   });
 }
 
-}  // namespace prototype::core
+}  // namespace prototype
