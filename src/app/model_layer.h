@@ -6,7 +6,6 @@
 
 #include "core/components/locomotion.h"
 #include "core/components/transform.h"
-#include "core/events/application_event.h"
 #include "core/events/key_event.h"
 #include "core/events/mouse_event.h"
 #include "core/layer.h"
@@ -16,7 +15,6 @@
 #include "core/renderer/model.h"
 #include "core/renderer/shader.h"
 #include "core/renderer/shape.h"
-#include "imgui.h"
 
 namespace prototype {
 
@@ -39,8 +37,6 @@ class ModelLayer : public core::Layer {
   bool OnMouseScrolledEvent(MouseScrolledEvent& event);
   bool OnMouseMovedEvent(MouseMovedEvent& event);
 
-  Shader model_shader_;
-  Shader light_shader_;
   Model model_;
   TransformComponent model_transform_;
   Camera camera_;

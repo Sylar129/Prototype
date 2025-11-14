@@ -37,6 +37,9 @@ void Shader::Compile(const std::filesystem::path& vertex_path,
 
   std::string vertex_shader_src = ReadTextFile(vertex_path);
   std::string fragment_shader_src = ReadTextFile(fragment_path);
+  if (vertex_shader_src.empty() || fragment_shader_src.empty()) {
+    return;
+  }
 
   // vertex shader
   GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
@@ -136,6 +139,55 @@ void Shader::SetPointLight(const std::string& name, const PointLight& light) {
   SetVec3(diffuse_name, light.diffuse);
   std::string specular_name = name + ".specular";
   SetVec3(specular_name, light.specular);
+}
+
+ShaderLibrary& ShaderLibrary::GetInstance() {
+  static ShaderLibrary instance;
+  return instance;
+}
+
+void ShaderLibrary::Clean() {
+  for (auto [name, shader] : shaders_) {
+    shader->Delete();
+  }
+  shaders_.clear();
+}
+
+void ShaderLibrary::Add(const std::string& name, const Ref<Shader>& shader) {
+  if (Exists(name)) {
+    CORE_LOG_ERROR("Shader already exists!");
+    shaders_[name]->Delete();
+  }
+  shaders_[name] = shader;
+}
+
+Ref<Shader> ShaderLibrary::Load(const std::string& name,
+                                const std::string& vert_path,
+                                const std::string& frag_path) {
+  auto shader = CreateRef<Shader>();
+  shader->Compile(vert_path, frag_path);
+  Add(name, shader);
+  return shader;
+}
+
+void ShaderLibrary::Remove(const std::string& name) {
+  if (!Exists(name)) {
+    CORE_LOG_ERROR("Shader not found!");
+    return;
+  }
+  shaders_[name]->Delete();
+  shaders_.erase(name);
+}
+
+Ref<Shader> ShaderLibrary::Get(const std::string& name) {
+  if (!Exists(name)) {
+    CORE_LOG_ERROR("Shader not found!");
+  }
+  return shaders_[name];
+}
+
+bool ShaderLibrary::Exists(const std::string& name) const {
+  return shaders_.find(name) != shaders_.end();
 }
 
 }  // namespace prototype
