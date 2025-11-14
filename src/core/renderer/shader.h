@@ -3,6 +3,8 @@
 #pragma once
 
 #include <filesystem>
+#include <memory>
+#include <unordered_map>
 
 #include "glad/gl.h"
 #include "glm/glm.hpp"
@@ -15,10 +17,6 @@ struct PointLight;
 class Shader {
  public:
   Shader();
-
-  void Compile(const std::filesystem::path& vertex_path,
-               const std::filesystem::path& fragment_path);
-  void Delete();
 
   Shader& Use();
 
@@ -34,7 +32,38 @@ class Shader {
   void SetPointLight(const std::string& name, const PointLight& light);
 
  private:
+  friend class ShaderLibrary;
+  void Compile(const std::filesystem::path& vertex_path,
+               const std::filesystem::path& fragment_path);
+  void Delete();
   GLuint id_;
+};
+
+template <typename T>
+using Ref = std::shared_ptr<T>;
+template <typename T, typename... Args>
+constexpr Ref<T> CreateRef(Args&&... args) {
+  return std::make_shared<T>(std::forward<Args>(args)...);
+}
+
+class ShaderLibrary {
+ public:
+  static ShaderLibrary& GetInstance();
+
+  void Clean();
+
+  void Add(const std::string& name, const Ref<Shader>& shader);
+  Ref<Shader> Load(const std::string& name, const std::string& vert_path,
+                   const std::string& frag_path);
+  void Remove(const std::string& name);
+
+  Ref<Shader> Get(const std::string& name);
+
+  bool Exists(const std::string& name) const;
+
+ private:
+  ShaderLibrary() = default;
+  std::unordered_map<std::string, Ref<Shader>> shaders_;
 };
 
 }  // namespace prototype
