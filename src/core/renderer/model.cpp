@@ -171,4 +171,46 @@ std::vector<Texture> Model::LoadMaterialTextures(aiMaterial* mat,
   }
   return textures;
 }
+
+ModelLibrary& ModelLibrary::GetInstance() {
+  static ModelLibrary instance;
+  return instance;
+}
+
+void ModelLibrary::Clean() {}
+
+void ModelLibrary::Add(const std::string& name, const Ref<Model>& model) {
+  if (Exists(name)) {
+    CORE_LOG_ERROR("model already exists!");
+  }
+  models_[name] = model;
+}
+Ref<Model> ModelLibrary::Load(const std::string& name,
+                              const std::filesystem::path& filepath) {
+  auto model = CreateRef<Model>();
+  model->LoadModel(filepath);
+  model->Process();
+  Add(name, model);
+  return model;
+}
+
+void ModelLibrary::Remove(const std::string& name) {
+  if (!Exists(name)) {
+    CORE_LOG_ERROR("model not found!");
+    return;
+  }
+  models_.erase(name);
+}
+
+Ref<Model> ModelLibrary::Get(const std::string& name) {
+  if (!Exists(name)) {
+    CORE_LOG_ERROR("model not found!");
+  }
+  return models_[name];
+}
+
+bool ModelLibrary::Exists(const std::string& name) const {
+  return models_.find(name) != models_.end();
+}
+
 }  // namespace prototype
