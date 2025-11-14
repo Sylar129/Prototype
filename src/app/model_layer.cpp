@@ -35,8 +35,8 @@ void ModelLayer::OnAttach(const Window& window) {
                                     "assets/shaders/light.frag");
   framebuffer_ = std::make_unique<Framebuffer>(window.GetFramebufferSize().x,
                                                window.GetFramebufferSize().y);
-  model_.LoadModel("assets/models/backpack/backpack.obj");
-  model_.Process();
+  ModelLibrary::GetInstance().Load("backpack",
+                                   "assets/models/backpack/backpack.obj");
 }
 
 void ModelLayer::OnDetach() {
@@ -54,8 +54,11 @@ void ModelLayer::OnEvent(Event& event) {
   dispatcher.Dispatch(this, &ModelLayer::OnMouseMovedEvent);
 }
 
+static bool movable = true;
+
 void ModelLayer::OnUpdate(float ts) {
   camera_.ProcessKeyboard(camera_move_, ts);
+  light_.position = orbit_light_.UpdatePosition(movable ? ts : 0);
 }
 
 void ModelLayer::OnRender() {
@@ -68,7 +71,7 @@ void ModelLayer::OnRender() {
 
   // render the loaded model
   model_shader.SetMat4("model", model_transform_.getMatrix());
-  model_.Draw(model_shader);
+  ModelLibrary::GetInstance().Get("backpack")->Draw(model_shader);
 
   auto& light_shader = *ShaderLibrary::GetInstance().Get("light");
   light_shader.Use();
@@ -87,7 +90,7 @@ void ModelLayer::OnRender() {
   ImGui::Begin("Controller");
   camera_.DrawContextMenu();
   light_.DrawContextMenu();
-  light_.position = orbit_light_.UpdatePosition(0);
+  ImGui::Selectable("move", &movable);
   orbit_light_.DrawMenu();
   model_transform_.DrawMenu("Model Transform");
   ImGui::End();

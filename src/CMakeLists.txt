@@ -43,6 +43,7 @@ set(CORE_SOURCES
     core/layer.h
     core/log.cpp
     core/log.h
+    core/misc.h
     core/imgui_layer.cpp
     core/imgui_layer.h
 )

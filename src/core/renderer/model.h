@@ -45,4 +45,24 @@ class Model {
   std::vector<Mesh> meshes_;
 };
 
+class ModelLibrary {
+ public:
+  static ModelLibrary& GetInstance();
+
+  void Clean();
+
+  void Add(const std::string& name, const Ref<Model>& model);
+  Ref<Model> Load(const std::string& name,
+                  const std::filesystem::path& filepath);
+  void Remove(const std::string& name);
+
+  Ref<Model> Get(const std::string& name);
+
+  bool Exists(const std::string& name) const;
+
+ private:
+  ModelLibrary() = default;
+  std::unordered_map<std::string, Ref<Model>> models_;
+};
+
 }  // namespace prototype

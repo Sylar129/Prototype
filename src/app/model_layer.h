@@ -12,7 +12,6 @@
 #include "core/renderer/camera.h"
 #include "core/renderer/framebuffer.h"
 #include "core/renderer/light.h"
-#include "core/renderer/model.h"
 #include "core/renderer/shader.h"
 #include "core/renderer/shape.h"
 
@@ -37,7 +36,6 @@ class ModelLayer : public Layer {
   bool OnMouseScrolledEvent(MouseScrolledEvent& event);
   bool OnMouseMovedEvent(MouseMovedEvent& event);
 
-  Model model_;
   TransformComponent model_transform_;
   Camera camera_;
   PointLight light_;
