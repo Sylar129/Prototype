@@ -7,7 +7,7 @@
 #include "backends/imgui_impl_opengl3.h"
 #include "imgui.h"
 
-namespace prototype::core {
+namespace prototype {
 
 ImguiLayer ::~ImguiLayer() {}
 
@@ -66,4 +66,4 @@ void ImguiLayer ::OnRenderEnd() {
   }
 }
 
-}  // namespace prototype::core
+}  // namespace prototype

@@ -9,7 +9,7 @@
 #include "core/layer.h"
 #include "core/window.h"
 
-namespace prototype::core {
+namespace prototype {
 
 class ImguiLayer;
 
@@ -44,4 +44,4 @@ class Application {
   std::vector<std::shared_ptr<Layer>> layer_stack_;
 };
 
-}  // namespace prototype::core
+}  // namespace prototype

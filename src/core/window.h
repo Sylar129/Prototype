@@ -8,7 +8,7 @@
 #include "core/events/event.h"
 #include "glm/glm.hpp"
 
-namespace prototype::core {
+namespace prototype {
 
 struct WindowSpecification {
   std::string title;
@@ -30,9 +30,9 @@ class Window {
 
   void SetEventCallback(const EventCallbackFn& callback);
 
-  glm::vec2 GetWindowSize() const;
+  glm::ivec2 GetWindowSize() const;
   // in MacOS, FramebufferSize != WindowSize
-  glm::vec2 GetFramebufferSize() const;
+  glm::ivec2 GetFramebufferSize() const;
   // FramebufferSize = WindowSize * ContentScale
   glm::vec2 GetContentScale() const;
 
@@ -54,4 +54,4 @@ class Window {
   WindowData data_;
 };
 
-}  // namespace prototype::core
+}  // namespace prototype

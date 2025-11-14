@@ -4,17 +4,19 @@
 
 #include "core/events/event.h"
 
-namespace prototype::core {
+namespace prototype {
+
+class Window;
 
 class Layer {
  public:
   virtual ~Layer() = default;
 
-  virtual void OnAttach() = 0;
+  virtual void OnAttach(const Window& window) = 0;
   virtual void OnDetach() = 0;
   virtual void OnEvent(Event& event) = 0;
   virtual void OnUpdate(float ts) = 0;
   virtual void OnRender() = 0;
 };
 
-}  // namespace prototype::core
+}  // namespace prototype

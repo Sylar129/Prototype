@@ -4,7 +4,7 @@
 
 struct GLFWwindow;
 
-namespace prototype::core {
+namespace prototype {
 
 class ImguiLayer {
  public:
@@ -16,4 +16,4 @@ class ImguiLayer {
   void OnRenderEnd();
 };
 
-}  // namespace prototype::core
+}  // namespace prototype
