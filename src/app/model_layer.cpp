@@ -54,11 +54,13 @@ void ModelLayer::OnEvent(Event& event) {
 
 void ModelLayer::OnUpdate(float ts) {
   camera_.ProcessKeyboard(camera_move_, ts);
+}
 
-  framebuffer_->BeginRecording();
+void ModelLayer::OnRender() {
+  // framebuffer_->BeginRecording();
   model_shader_.Use();
 
-  light_.position = orbit_light_.UpdatePosition(ts);
+  light_.position = orbit_light_.UpdatePosition(0);
 
   model_shader_.SetCamara("", camera_);
   model_shader_.SetPointLight("light", light_);
@@ -79,19 +81,7 @@ void ModelLayer::OnUpdate(float ts) {
   light_shader_.SetMat4("model", model);
   light_cube_.Draw(light_shader_);
 
-  framebuffer_->EndRecording();
-}
-
-void ModelLayer::OnRender() {
-  ImGui::Begin("viewport");
-
-  ImVec2 viewport_panel_size = ImGui::GetContentRegionAvail();
-  // flip uv here
-  ImGui::Image(framebuffer_->color_attachment, viewport_panel_size, {0, 1},
-               {1, 0});
-
-  ImGui::End();
-
+  // framebuffer_->EndRecording();
   ImGui::Begin("Camera Controller");
   camera_.DrawContextMenu();
   light_.DrawContextMenu();
