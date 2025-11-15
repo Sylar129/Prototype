@@ -37,6 +37,7 @@ class ModelLayer : public Layer {
   bool OnMouseMovedEvent(MouseMovedEvent& event);
 
   TransformComponent model_transform_;
+  TransformComponent model_transform2_;
   Camera camera_;
   PointLight light_;
   Camera::Movement camera_move_;

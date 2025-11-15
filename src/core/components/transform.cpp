@@ -90,21 +90,21 @@ glm::mat4 TransformComponent::getMatrix() const {
 }
 
 void TransformComponent::DrawMenu(const std::string& label) {
-  constexpr ImGuiTreeNodeFlags kTreeNodeFlags =
-      ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowOverlap |
-      ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth |
-      ImGuiTreeNodeFlags_FramePadding;
+  // constexpr ImGuiTreeNodeFlags kTreeNodeFlags =
+  //     ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowOverlap |
+  //     ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth |
+  //     ImGuiTreeNodeFlags_FramePadding;
 
-  ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{4, 4});
-  float line_height =
-      GImGui->Font->LegacySize + GImGui->Style.FramePadding.y * 2.0f;
-  ImGui::Separator();
-  // NOLINTNEXTLINE
-  bool open = ImGui::TreeNodeEx((void*)typeid(TransformComponent).hash_code(),
-                                kTreeNodeFlags, "%s", label.c_str());
-  ImGui::PopStyleVar();
+  // ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{4, 4});
+  // float line_height =
+  //     GImGui->Font->LegacySize + GImGui->Style.FramePadding.y * 2.0f;
+  // ImGui::Separator();
+  // // NOLINTNEXTLINE
+  // bool open = ImGui::TreeNodeEx((void*)typeid(TransformComponent).hash_code(),
+  //                               kTreeNodeFlags, "%s", label.c_str());
+  // ImGui::PopStyleVar();
 
-  if (open) {
+  if (ImGui::TreeNode(label.c_str())) {
     DrawVec3Control("Translation", translation);
 
     glm::vec3 r = glm::degrees(rotation);

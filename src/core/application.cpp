@@ -59,7 +59,7 @@ void Application::Run() {
       break;
     }
 
-    glClearColor(0, 0, 0, 1.0);
+    glClearColor(0.5, 0.4, 0.2, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // event

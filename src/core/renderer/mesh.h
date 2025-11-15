@@ -4,6 +4,7 @@
 
 #include <vector>
 
+#include "core/renderer/material.h"
 #include "core/renderer/shader.h"
 #include "core/renderer/texture.h"
 #include "glm/glm.hpp"
@@ -36,6 +37,7 @@ class Mesh {
 
   void SetDiffuseMaps(const std::vector<Texture>& diffuse);
   void SetSpeculareMaps(const std::vector<Texture>& specular);
+  void SetMaterial(const Material& material);
 
   void Draw(Shader& shader);
 
@@ -45,6 +47,7 @@ class Mesh {
   std::vector<uint32_t> indices_;
   std::vector<Texture> diffuse_maps_;
   std::vector<Texture> specular_maps_;
+  Material material_;
   uint32_t vao_;
   uint32_t vbo_;
   uint32_t ebo_;

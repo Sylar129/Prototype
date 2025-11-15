@@ -23,6 +23,8 @@ set(CORE_SOURCES
     core/renderer/image.h
     core/renderer/light.cpp
     core/renderer/light.h
+    core/renderer/material.cpp
+    core/renderer/material.h
     core/renderer/mesh.cpp
     core/renderer/mesh.h
     core/renderer/model.cpp

@@ -20,27 +20,33 @@ void Mesh::SetSpeculareMaps(const std::vector<Texture>& specular) {
   specular_maps_ = specular;
 }
 
+void Mesh::SetMaterial(const Material& material) { material_ = material; }
+
 void Mesh::Draw(Shader& shader) {
   int texture_num = 0;
 
-  unsigned int diffuse_num = 1;
-  for (const auto& texture : diffuse_maps_) {
-    glActiveTexture(GL_TEXTURE0 + texture_num);
+  if (diffuse_maps_.empty() || specular_maps_.empty()) {
+    material_.UpdateShader();
+  } else {
+    unsigned int diffuse_num = 1;
+    for (const auto& texture : diffuse_maps_) {
+      glActiveTexture(GL_TEXTURE0 + texture_num);
 
-    std::string name = std::format("material{}.diffuse", diffuse_num++);
-    shader.SetInt(name, texture_num);
-    glBindTexture(GL_TEXTURE_2D, texture.handle);
-    texture_num++;
-  }
+      std::string name = std::format("material{}.diffuse", diffuse_num++);
+      shader.SetInt(name, texture_num);
+      glBindTexture(GL_TEXTURE_2D, texture.handle);
+      texture_num++;
+    }
 
-  unsigned int specular_num = 1;
-  for (const auto& texture : specular_maps_) {
-    glActiveTexture(GL_TEXTURE0 + texture_num);
+    unsigned int specular_num = 1;
+    for (const auto& texture : specular_maps_) {
+      glActiveTexture(GL_TEXTURE0 + texture_num);
 
-    std::string name = std::format("material{}.specular", specular_num++);
-    shader.SetInt(name, texture_num);
-    glBindTexture(GL_TEXTURE_2D, texture.handle);
-    texture_num++;
+      std::string name = std::format("material{}.specular", specular_num++);
+      shader.SetInt(name, texture_num);
+      glBindTexture(GL_TEXTURE_2D, texture.handle);
+      texture_num++;
+    }
   }
 
   glActiveTexture(GL_TEXTURE0);

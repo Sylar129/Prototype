@@ -32,11 +32,13 @@ void ModelLayer::OnAttach(const Window& window) {
                                     "assets/shaders/model.frag");
   ShaderLibrary::GetInstance().Load("light", "assets/shaders/light.vert",
                                     "assets/shaders/light.frag");
+  ShaderLibrary::GetInstance().Load("phong", "assets/shaders/phong.vert",
+                                    "assets/shaders/phong.frag");
   framebuffer_ = std::make_unique<Framebuffer>(window.GetFramebufferSize().x,
                                                window.GetFramebufferSize().y);
   ModelLibrary::GetInstance().Load("backpack",
                                    "assets/models/backpack/backpack.obj");
-
+  ModelLibrary::GetInstance().Load("floor", "assets/models/floor/floor.obj");
   light_.SetupMotion(SpiralMotion(5, {0.0, 0.0, 0.0}, 1, 0.5, 0, 0));
 }
 
@@ -64,15 +66,26 @@ void ModelLayer::OnUpdate(float ts) {
 
 void ModelLayer::OnRender() {
   // framebuffer_->BeginRecording();
-  auto& model_shader = *ShaderLibrary::GetInstance().Get("model");
-  model_shader.Use();
+  ShaderLibrary::GetInstance().Get("phong")->Use();
+  ShaderLibrary::GetInstance().Get("phong")->SetCamara("", camera_);
+  ShaderLibrary::GetInstance().Get("phong")->SetPointLight("light", light_);
+  ShaderLibrary::GetInstance().Get("phong")->SetMat4(
+      "model", model_transform_.getMatrix());
+  ModelLibrary::GetInstance().Get("floor")->Draw(
+      *ShaderLibrary::GetInstance().Get("phong"));
 
-  model_shader.SetCamara("", camera_);
-  model_shader.SetPointLight("light", light_);
+  // auto& model_shader = *ShaderLibrary::GetInstance().Get("model");
+  // model_shader.Use();
 
-  // render the loaded model
-  model_shader.SetMat4("model", model_transform_.getMatrix());
-  ModelLibrary::GetInstance().Get("backpack")->Draw(model_shader);
+  // model_shader.SetCamara("", camera_);
+  // model_shader.SetPointLight("light", light_);
+
+  // // render the loaded model
+  // model_shader.SetMat4("model", model_transform_.getMatrix());
+  // ModelLibrary::GetInstance().Get("backpack")->Draw(model_shader);
+
+  // model_shader.SetMat4("model", model_transform2_.getMatrix());
+  // ModelLibrary::GetInstance().Get("backpack")->Draw(model_shader);
 
   light_.Render(camera_);
 
@@ -81,6 +94,7 @@ void ModelLayer::OnRender() {
   camera_.DrawContextMenu();
   light_.RenderMenu();
   model_transform_.DrawMenu("Model Transform");
+  model_transform2_.DrawMenu("Model Transform2");
   ImGui::End();
 }
 

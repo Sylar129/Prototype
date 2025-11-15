@@ -140,6 +140,7 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
   Mesh m(vertices, indices);
   m.SetDiffuseMaps(diffuse_maps);
   m.SetSpeculareMaps(specular_maps);
+  m.SetMaterial(Material::FromAssimp(material));
   return m;
 }
 
