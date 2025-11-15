@@ -34,21 +34,7 @@ glm::vec3 SpiralMotion::UpdatePosition(float dt) {
 }
 
 void SpiralMotion::DrawMenu(const std::string& label) {
-  constexpr ImGuiTreeNodeFlags kTreeNodeFlags =
-      ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowOverlap |
-      ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth |
-      ImGuiTreeNodeFlags_FramePadding;
-
-  ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{4, 4});
-  float line_height =
-      GImGui->Font->LegacySize + GImGui->Style.FramePadding.y * 2.0f;
-  ImGui::Separator();
-  // NOLINTNEXTLINE
-  bool open = ImGui::TreeNodeEx((void*)typeid(SpiralMotion).hash_code(),
-                                kTreeNodeFlags, "%s", label.c_str());
-  ImGui::PopStyleVar();
-
-  if (open) {
+  if (ImGui::TreeNode("SpiralMotion")) {
     ImGui::SliderFloat3("Center", glm::value_ptr(center_), -100, 100);
     ImGui::SliderFloat("Radius", &radius_, 1, 100);
     ImGui::SliderAngle("Omega theta", &omega_theta_);

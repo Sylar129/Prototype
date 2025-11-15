@@ -39,8 +39,6 @@ class ModelLayer : public Layer {
   TransformComponent model_transform_;
   Camera camera_;
   PointLight light_;
-  SpiralMotion orbit_light_;
-  Cube light_cube_;
   Camera::Movement camera_move_;
   bool camera_can_move_ = false;
   std::unique_ptr<Framebuffer> framebuffer_;

@@ -22,8 +22,7 @@ ModelLayer::ModelLayer()
              {0.2, 0.2, 0.2},  // ambient
              {0.5, 0.5, 0.5},  // diffuse
              {1.0, 1.0, 1.0}   // specular
-             ),
-      orbit_light_(5, {0.0, 0.0, 0.0}, 1, 0.5, 0, 0) {}
+      ) {}
 
 ModelLayer::~ModelLayer() {}
 
@@ -37,6 +36,8 @@ void ModelLayer::OnAttach(const Window& window) {
                                                window.GetFramebufferSize().y);
   ModelLibrary::GetInstance().Load("backpack",
                                    "assets/models/backpack/backpack.obj");
+
+  light_.SetupMotion(SpiralMotion(5, {0.0, 0.0, 0.0}, 1, 0.5, 0, 0));
 }
 
 void ModelLayer::OnDetach() {
@@ -58,7 +59,7 @@ static bool movable = true;
 
 void ModelLayer::OnUpdate(float ts) {
   camera_.ProcessKeyboard(camera_move_, ts);
-  light_.position = orbit_light_.UpdatePosition(movable ? ts : 0);
+  light_.Update(ts);
 }
 
 void ModelLayer::OnRender() {
@@ -73,25 +74,12 @@ void ModelLayer::OnRender() {
   model_shader.SetMat4("model", model_transform_.getMatrix());
   ModelLibrary::GetInstance().Get("backpack")->Draw(model_shader);
 
-  auto& light_shader = *ShaderLibrary::GetInstance().Get("light");
-  light_shader.Use();
-  auto projection = glm::perspective(glm::radians(camera_.GetZoom()),
-                                     (float)1920 / (float)1080, 0.1f, 100.0f);
-  light_shader.SetMat4("projection", projection);
-  light_shader.SetMat4("view", camera_.GetViewMatrix());
-  glm::mat4 model = glm::mat4(1.0f);
-  model = glm::mat4(1.0f);
-  model = glm::translate(model, light_.position);
-  model = glm::scale(model, glm::vec3(0.2f));  // a smaller cube
-  light_shader.SetMat4("model", model);
-  light_cube_.Draw(light_shader);
+  light_.Render(camera_);
 
   // framebuffer_->EndRecording();
   ImGui::Begin("Controller");
   camera_.DrawContextMenu();
-  light_.DrawContextMenu();
-  ImGui::Selectable("move", &movable);
-  orbit_light_.DrawMenu();
+  light_.RenderMenu();
   model_transform_.DrawMenu("Model Transform");
   ImGui::End();
 }

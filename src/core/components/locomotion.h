@@ -10,6 +10,7 @@ namespace prototype {
 
 class SpiralMotion {
  public:
+  SpiralMotion() = default;
   SpiralMotion(float radius, const glm::vec3& center, float omega_theta,
                float omega_phi, float theta_initial, float phi_initial)
       : radius_(radius),
